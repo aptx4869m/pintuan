@@ -36,14 +36,14 @@
 </md-card>
 
 <md-list *ngIf="!isOwner">
-  <md-list-item *ngFor="let item of collection.items">
+  <md-list-item *ngFor="let item of collection.items.values()">
     <img [src]="item.img" *ngIf="item.img != ''" md-list-avatar />
     <p line>{{item.name}}</p>
     <p line *ngIf="item.price != 0">价格： {{item.price}}</p>
   </md-list-item>
 </md-list>
 <div  *ngIf="isOwner">
-  <md-card *ngFor="let item of collection.items">
+  <md-card *ngFor="let item of collection.items.values()">
     <md-card-header>
       <img [src]="item.img" *ngIf="item.img != ''" md-card-avatar />
       <md-card-title>{{item.name}}</md-card-title>
@@ -69,12 +69,12 @@
 <button md-button (click)="addPeople(peopleName.value); peopleName.value = ''">参团</button>
 
 <div *ngIf="isOwner">
-  <md-card *ngFor="let people of collection.peoples">
+  <md-card *ngFor="let people of collection.peoples.values()">
     <md-card-header>
       <md-card-title>{{people.name}}</md-card-title>
       <md-card-subtitle *ngIf="people.total != 0">总共价格 {{people.total}}</md-card-subtitle>
     </md-card-header>
-    <div *ngFor="let item of collection.items">
+    <div *ngFor="let item of collection.items.values()">
       <md-input-container>
         <input mdInput [(ngModel)]="people.buy[item.name]" [placeholder]="item.name" type="number"/>
       </md-input-container>
@@ -88,7 +88,7 @@
     <md-card-title>{{currentPeople.name}}</md-card-title>
     <md-card-subtitle *ngIf="currentPeople.total != 0">总共价格 {{currentPeople.total}}</md-card-subtitle>
   </md-card-header>
-  <div *ngFor="let item of collection.items">
+  <div *ngFor="let item of collection.items.values()">
     <md-input-container>
       <input mdInput [(ngModel)]="currentPeople.buy[item.name]" [placeholder]="item.name" type="number"/>
     </md-input-container>

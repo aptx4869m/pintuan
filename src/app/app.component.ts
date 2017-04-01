@@ -1,4 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import * as wilddog from 'wilddog';
 
 class Item {
@@ -28,8 +29,8 @@ class Collection {
   description: string = '';
   img: string = '';
   rate: number = 1;
-  items: Item[] = [];
-  peoples: People[] = [];
+  items: Map<string, Item> = new Map<string, Item>();
+  peoples: Map<string, People> = new Map<string, People>();
 }
 
 @Component({
@@ -40,22 +41,17 @@ export class AppComponent {
   isOwner: boolean = true;
   collection: Collection = new Collection();
   currentPeople: People;
+  key: string;
   ref = wilddog.sync().ref();
 
-  constructor() {  }
+  constructor(private _route: ActivatedRoute) {
+    _route.params.subscribe(p => {
+      this.key = p['id'];
+    });
+  }
   
   deleteItem(name: string) {
-    console.log(name);
-    let index = -1;
-    this.collection.items.forEach((item, i) => {
-      if (item.name === name) {
-        index = i;
-      }
-    });
-    if (index > -1) {
-      console.log(index);
-      this.collection.items.splice(index, 1);
-    }
+    delete this.collection.items[name];
     this.collection.peoples.forEach((p) => {
       delete p.buy[name]
     });
@@ -65,41 +61,28 @@ export class AppComponent {
     // check name
     if (name && name.trim() !== '') {
       name = name.trim();
-      let notexists = this.collection.items.filter((i) => i.name === name).length == 0;
-      console.log(notexists);
-      if (notexists) {
-        this.collection.items.push(new Item(name));
+      if (!this.collection.items[name]) {
+        this.collection.items[name] = new Item(name);
       }
     }
   }
   
   addPeople(name: string) {
     if (name && name.trim() !== '') {
-      let matches = this.collection.peoples.filter((i) => i.name === name);
-      if (matches.length == 0) {
-        let newPeople = new People(name);
-        this.collection.peoples.push(newPeople);
-        if (!this.isOwner) {
-          this.currentPeople = newPeople;
-        }
-      } else if (!this.isOwner) {
-        this.currentPeople = matches[0];
+      let match = this.collection.peoples[name];
+      if (!match) {
+        match = new People(name);
+        this.collection.peoples[name] = match;
+      }
+      if (!this.isOwner) {
+        this.currentPeople = match;
       }
     }
   }
   
   deletePeople(name: string) {
     console.log(name);
-    let index = -1;
-    this.collection.peoples.forEach((people, i) => {
-      if (people.name === name) {
-        index = i;
-      }
-    });
-    if (index > -1) {
-      console.log(index);
-      this.collection.peoples.splice(index, 1);
-    }
+    delete this.collection.peoples[name];
     if (this.currentPeople.name === name) {
       this.currentPeople = null;
     }
@@ -108,23 +91,22 @@ export class AppComponent {
   submit() {
     this.calculate();
     if (this.isOwner) {
-      console.log(this.collection);
+      this.ref.child(this.key).update(this.collection);
     } else if (this.currentPeople) {
-      let matches = this.collection.peoples.filter((p) => p.name === this.currentPeople.name);
-      console.log(matches);
+      this.ref.child(this.key).child('peoples').child(this.currentPeople.name).update(this.currentPeople);
     }
     
   }
   
   calculate() {
-    this.collection.peoples.forEach((people) => {
+    this.collection.peoples.forEach((people, name) => {
       people.total = 0;
     }); 
-    this.collection.items.forEach((item) => {
+    this.collection.items.forEach((item, name) => {
       item.total = 0;
     });
-    this.collection.items.forEach((item) => {
-      this.collection.peoples.forEach((people) => {
+    this.collection.items.forEach((item, name) => {
+      this.collection.peoples.forEach((people, name) => {
         let numberItems = people.buy[item.name];
         if (numberItems) {
           item.total += numberItems;

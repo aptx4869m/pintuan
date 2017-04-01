@@ -1,3 +1,98 @@
-<h1>
-  {{title}}
-</h1>
+<md-slide-toggle [(ngModel)]="isOwner"></md-slide-toggle>
+<md-card>
+  <md-card-title>
+    <md-input-container *ngIf="isOwner">
+      <input mdInput [(ngModel)]="collection.name" placeholder="名"/>
+    </md-input-container>
+    <div *ngIf="!isOwner">
+       {{collection.name}}
+    </div>
+  </md-card-title>
+  <img [src]="collection.img" *ngIf="collection.img != ''" md-card-image/>
+  <md-card-content *ngIf="isOwner">
+    <md-input-container>
+      <textarea mdInput [(ngModel)]="collection.description" placeholder="详细"></textarea>
+    </md-input-container>
+    <br>
+    <md-input-container>
+      <input mdInput [(ngModel)]="collection.img" placeholder="图片地址"/>
+    </md-input-container>
+    <br>
+    <md-input-container>
+      <input mdInput [(ngModel)]="collection.rate" placeholder="汇率 "/>
+    </md-input-container>
+
+  </md-card-content>
+  <md-card-content *ngIf="!isOwner">
+    {{collection.description}}
+    <p *ngIf="collection.rate">汇率 {{collection.rate}}</p>
+  </md-card-content>
+  <md-card-actions *ngIf="isOwner">
+    <md-input-container>
+      <input mdInput #itemName placeholder="谷子名"/>
+    </md-input-container>
+    <button md-button (click)="addItem(itemName.value); itemName.value = ''">加谷子</button><br>
+  </md-card-actions>
+</md-card>
+
+<md-list *ngIf="!isOwner">
+  <md-list-item *ngFor="let item of collection.items">
+    <img [src]="item.img" *ngIf="item.img != ''" md-list-avatar />
+    <p line>{{item.name}}</p>
+    <p line *ngIf="item.price != 0">价格： {{item.price}}</p>
+  </md-list-item>
+</md-list>
+<div  *ngIf="isOwner">
+  <md-card *ngFor="let item of collection.items">
+    <md-card-header>
+      <img [src]="item.img" *ngIf="item.img != ''" md-card-avatar />
+      <md-card-title>{{item.name}}</md-card-title>
+      <md-card-subtitle *ngIf="item.total != 0">总共 {{item.total}}</md-card-subtitle>
+    </md-card-header>
+    <md-card-content>
+      <md-input-container>
+        <input mdInput [(ngModel)]="item.img" placeholder="图片地址"/>
+      </md-input-container>
+      <md-input-container>
+        <input mdInput [(ngModel)]="item.price" placeholder="价格" type="number"/>
+      </md-input-container>
+      <md-input-container>
+        <input mdInput [(ngModel)]="item.stock" placeholder="库存" type="number"/>
+      </md-input-container>
+      <button md-button (click)="deleteItem(item.name)">删除</button>
+    </md-card-content>
+  </md-card>
+</div>
+<md-input-container>
+  <input mdInput #peopleName placeholder="昵称"/>
+</md-input-container>
+<button md-button (click)="addPeople(peopleName.value); peopleName.value = ''">参团</button>
+
+<div *ngIf="isOwner">
+  <md-card *ngFor="let people of collection.peoples">
+    <md-card-header>
+      <md-card-title>{{people.name}}</md-card-title>
+      <md-card-subtitle *ngIf="people.total != 0">总共价格 {{people.total}}</md-card-subtitle>
+    </md-card-header>
+    <div *ngFor="let item of collection.items">
+      <md-input-container>
+        <input mdInput [(ngModel)]="people.buy[item.name]" [placeholder]="item.name" type="number"/>
+      </md-input-container>
+    </div>
+    <button md-button (click)="deletePeople(people.name)">删除 </button>
+  </md-card>
+</div>
+
+<md-card *ngIf="!isOwner && currentPeople != null">
+  <md-card-header>
+    <md-card-title>{{currentPeople.name}}</md-card-title>
+    <md-card-subtitle *ngIf="currentPeople.total != 0">总共价格 {{currentPeople.total}}</md-card-subtitle>
+  </md-card-header>
+  <div *ngFor="let item of collection.items">
+    <md-input-container>
+      <input mdInput [(ngModel)]="currentPeople.buy[item.name]" [placeholder]="item.name" type="number"/>
+    </md-input-container>
+  </div>
+  <button md-button (click)="deletePeople(currentPeople.name)">删除 </button>
+</md-card>
+<button md-button (click)="submit()">搞定</button>

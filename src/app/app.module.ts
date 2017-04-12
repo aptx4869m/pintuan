@@ -2,10 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import {MaterialModule} from '@angular/material';
+
 import { RouterModule, Routes } from '@angular/router';
 import * as wilddog from 'wilddog';
 
+import {MyMaterialModule} from './material-module';
 import {UserService} from './user.service';
 import {GoodsService} from './goods.service';
 import { AppComponent } from './app.component';
@@ -41,7 +42,7 @@ const appRoutes: Routes = [
     BrowserModule,
     FormsModule,
     HttpModule,
-    MaterialModule,
+    MyMaterialModule,
     RouterModule.forRoot(appRoutes)
   ],
   providers: [],

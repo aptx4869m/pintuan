@@ -2,11 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-
+import {MaterialModule} from '@angular/material';
 import { RouterModule, Routes } from '@angular/router';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import * as wilddog from 'wilddog';
 
-import {MyMaterialModule} from './material-module';
 import {UserService} from './user.service';
 import {GoodsService} from './goods.service';
 import { AppComponent } from './app.component';
@@ -15,14 +15,17 @@ import { GroupInfoEditorComponent } from './group-info-editor/group-info-editor.
 import { GroupItemEditorComponent } from './group-item-editor/group-item-editor.component';
 import { GroupPeopleEditorComponent } from './group-people-editor/group-people-editor.component';
 import { SecondHandComponent } from './second-hand/second-hand.component';
+import { AuthComponent } from './auth/auth.component';
 
 var config = {
-  syncURL: "https://aptx4869.wilddogio.com"
+  syncURL: "https://aptx4869.wilddogio.com",
+  authDomain: "aptx4869.wilddog.com"
 };
 wilddog.initializeApp(config);
 
 const appRoutes: Routes = [
-  { path: '*', component: GroupEditorComponent },
+  { path: '*', pathMatch: 'full', component: AuthComponent },
+  { path: 'register', component: AuthComponent },
   { path: 'group-edit/:id', component: GroupEditorComponent },
   { path: 'group/:id', component: GroupJoinComponent },
   { path: 'second-hand', component: SecondHandComponent }
@@ -36,13 +39,15 @@ const appRoutes: Routes = [
     GroupInfoEditorComponent,
     GroupItemEditorComponent,
     GroupPeopleEditorComponent,
-    SecondHandComponent
+    SecondHandComponent,
+    AuthComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     HttpModule,
-    MyMaterialModule,
+    MaterialModule,
     RouterModule.forRoot(appRoutes)
   ],
   providers: [],

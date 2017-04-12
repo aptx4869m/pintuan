@@ -40,7 +40,6 @@ export class SecondHandComponent implements OnDestroy {
         this.secondHandItems.set(childSnapshot.key(), item);
         this.keys.push(childSnapshot.key());
         this.filteredKeys = this.keys.slice();
-        console.log(this.filteredKeys);
       });
     });
   }

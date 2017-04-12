@@ -1,0 +1,36 @@
+<div *ngIf="isOwner">
+  <md-input-container>
+    <input mdInput #itemName placeholder="谷子名"/>
+  </md-input-container>
+  <button md-button (click)="addItem(itemName.value); itemName.value = ''">加谷子</button><br>
+</div>
+
+<md-list>
+  <md-list-item *ngFor="let key of keys">
+    <img [src]="items.get(key).img" *ngIf="items.get(key).img != null && items.get(key).img != ''" md-list-avatar />
+    <h4 md-line>{{items.get(key).name}}  </h4>
+    <p md-line *ngIf="items.get(key).price">价格： {{items.get(key).price}}</p>
+    <a md-icon-button *ngIf="isOwner" (click)="editItem(key)"><md-icon>edit</md-icon></a>
+    <a md-icon-button *ngIf="isOwner" (click)="deleteItem(key)"><md-icon>delete</md-icon></a>
+  </md-list-item>
+</md-list>
+
+<md-card *ngIf="item != null && isOwner">
+  <md-card-header>
+    <img [src]="item.img" *ngIf="item.img" md-card-avatar />
+    <md-card-title>{{item.name}}</md-card-title>
+  </md-card-header>
+  <md-card-content>
+    <md-input-container>
+      <input mdInput [(ngModel)]="item.img" placeholder="图片地址" (blur)="submit()"/>
+    </md-input-container>
+    <md-input-container>
+      <input mdInput [(ngModel)]="item.price" placeholder="价格" type="number" (blur)="submit()"/>
+    </md-input-container>
+    <md-input-container>
+      <input mdInput [(ngModel)]="item.stock" placeholder="库存" type="number" (blur)="submit()"/>
+    </md-input-container>
+    <a md-icon-button (click)="deleteItem(itemKey)"><md-icon>delete</md-icon></a>
+    <a md-icon-button (click)="close()"><md-icon>close</md-icon></a>
+  </md-card-content>
+</md-card>

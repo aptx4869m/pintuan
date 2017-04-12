@@ -1,0 +1,64 @@
+
+<md-card>
+  <md-card-title>
+    <p *ngIf="totalPrice">共计价格 {{totalPrice}} 日元</p>
+    <p *ngIf="totalCount"> 共计 {{totalCount}} 件</p>
+  </md-card-title>
+  <md-input-container>
+    <input mdInput [(ngModel)]="filterItem.name" placeholder="物品名称" (blur)="filter()"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput [(ngModel)]="filterItem.user" placeholder="用户昵称"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput [(ngModel)]="filterItem.link" placeholder="链接"/>
+  </md-input-container>
+  <md-input-container>
+    <input mdInput [(ngModel)]="filterItem.price" placeholder="价格" type="number"/>
+  </md-input-container>
+  <md-button-toggle-group name="deliveriesfilter" [(ngModel)]="filterItem.delivered" >
+    <md-button-toggle *ngFor="let delivery of deliveries" [value]="delivery.code">{{ delivery.name }}</md-button-toggle>
+  </md-button-toggle-group>
+  <md-button-toggle-group name="paysfilter" [(ngModel)]="filterItem.paid">
+    <md-button-toggle *ngFor="let pay of pays" [value]="pay.code">{{ pay.name }}</md-button-toggle>
+  </md-button-toggle-group>
+  <button md-button (click)="filter()">过滤</button>
+</md-card>
+
+<md-list>
+  <md-list-item *ngFor="let key of filteredKeys">
+    <h4 md-line>{{secondHandItems.get(key).name}} | {{secondHandItems.get(key).user}} | {{secondHandItems.get(key).price}}</h4>
+    <p md-line><a [href]="secondHandItems.get(key).link" target="_blank">{{secondHandItems.get(key).link}}</a></p>
+    <p md-line>{{getDelivered(key)}} | {{getPaid(key)}}</p>
+    <a md-icon-button (click)="editItem(key)"><md-icon>edit</md-icon></a>
+    <a md-icon-button (click)="deleteItem(key)"><md-icon>delete</md-icon></a>
+  </md-list-item>
+</md-list>
+
+<button md-button (click)="addItem()">添加一笔</button>
+
+<md-card>
+  <md-input-container>
+    <input mdInput [(ngModel)]="currentItem.name" placeholder="物品名称" (blur)="submit()"/>
+  </md-input-container>
+  <br>
+  <md-input-container>
+    <input mdInput [(ngModel)]="currentItem.user" placeholder="用户昵称" (blur)="submit()"/>
+  </md-input-container>
+  <br>
+  <md-input-container>
+    <input mdInput [(ngModel)]="currentItem.link" placeholder="链接" (blur)="submit()"/>
+  </md-input-container>
+  <br>
+  <md-input-container>
+    <input mdInput [(ngModel)]="currentItem.price" placeholder="价格" (blur)="submit()" type="number"/>
+  </md-input-container>
+  <br>
+  <md-button-toggle-group name="deliveries" [(ngModel)]="currentItem.delivered"  (blur)="submit()">
+     <md-button-toggle *ngFor="let delivery of deliveries" [value]="delivery.code">{{ delivery.name }}</md-button-toggle>
+  </md-button-toggle-group>
+  <br>
+  <md-button-toggle-group name="pays" [(ngModel)]="currentItem.paid"  (blur)="submit()">
+     <md-button-toggle *ngFor="let pay of pays" [value]="pay.code">{{ pay.name }}</md-button-toggle>
+  </md-button-toggle-group>
+</md-card>

@@ -1,0 +1,29 @@
+<md-card>
+  <md-card-title>
+    <md-input-container *ngIf="isOwner">
+      <input mdInput [(ngModel)]="collection.name" placeholder="名" (blur)="submit()"/>
+    </md-input-container>
+    <div *ngIf="!isOwner">
+       {{collection.name}}
+    </div>
+  </md-card-title>
+  <img [src]="collection.img" *ngIf="collection.img != ''" md-card-image/>
+  <md-card-content *ngIf="isOwner">
+    <md-input-container>
+      <textarea mdInput [(ngModel)]="collection.description" placeholder="详细" (blur)="submit()"></textarea>
+    </md-input-container>
+    <br>
+    <md-input-container>
+      <input mdInput [(ngModel)]="collection.img" placeholder="图片地址" (blur)="submit()"/>
+    </md-input-container>
+    <br>
+    <md-input-container>
+      <input mdInput [(ngModel)]="collection.rate" placeholder="汇率" (blur)="submit()"/>
+    </md-input-container>
+    <md-checkbox [(ngModel)]="collection.open" (change)="submit()">开放</md-checkbox>
+  </md-card-content>
+  <md-card-content *ngIf="!isOwner">
+    {{collection.description}}
+    <p *ngIf="collection.rate">汇率 {{collection.rate}}</p>
+  </md-card-content>
+</md-card>

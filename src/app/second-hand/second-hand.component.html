@@ -2,27 +2,29 @@
 <md-card>
   <md-card-title>
     过滤
-    <p *ngIf="totalPrice">共计价格 {{totalPrice}} 日元</p>
-    <p *ngIf="totalCount"> 共计 {{totalCount}} 件</p>
+    <p *ngIf="totalPrice || totalPrice">共计价格 {{totalPrice}} 日元 共计 {{totalCount}} 件</p>
+    <md-input-container>
+      <input mdInput [(ngModel)]="filterItem.user" placeholder="用户昵称"/>
+    </md-input-container>
+    <a md-icon-button (click)="expanded = !expanded"><md-icon>{{expanded? 'expand_less' : 'expand_more'}}</md-icon></a>
   </md-card-title>
-  <md-input-container>
-    <input mdInput [(ngModel)]="filterItem.name" placeholder="物品名称" (blur)="filter()"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput [(ngModel)]="filterItem.user" placeholder="用户昵称"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput [(ngModel)]="filterItem.link" placeholder="链接"/>
-  </md-input-container>
-  <md-input-container>
-    <input mdInput [(ngModel)]="filterItem.price" placeholder="价格" type="number"/>
-  </md-input-container>
-  <md-button-toggle-group name="deliveriesfilter" [(ngModel)]="filterItem.delivered" >
-    <md-button-toggle *ngFor="let delivery of deliveries" [value]="delivery.code">{{ delivery.name }}</md-button-toggle>
-  </md-button-toggle-group>
-  <md-button-toggle-group name="paysfilter" [(ngModel)]="filterItem.paid">
-    <md-button-toggle *ngFor="let pay of pays" [value]="pay.code">{{ pay.name }}</md-button-toggle>
-  </md-button-toggle-group>
+  <md-card-content *ngIf="expanded">
+    <md-input-container>
+      <input mdInput [(ngModel)]="filterItem.name" placeholder="物品名称" (blur)="filter()"/>
+    </md-input-container>
+    <md-input-container>
+      <input mdInput [(ngModel)]="filterItem.link" placeholder="链接"/>
+    </md-input-container>
+    <md-input-container>
+      <input mdInput [(ngModel)]="filterItem.price" placeholder="价格" type="number"/>
+    </md-input-container>
+    <md-button-toggle-group name="deliveriesfilter" [(ngModel)]="filterItem.delivered" >
+      <md-button-toggle *ngFor="let delivery of deliveries" [value]="delivery.code">{{ delivery.name }}</md-button-toggle>
+    </md-button-toggle-group>
+    <md-button-toggle-group name="paysfilter" [(ngModel)]="filterItem.paid">
+      <md-button-toggle *ngFor="let pay of pays" [value]="pay.code">{{ pay.name }}</md-button-toggle>
+    </md-button-toggle-group>
+  </md-card-content>
   <md-card-actions>
     <button md-button (click)="filter()">过滤+计算</button>
   </md-card-actions>
@@ -30,6 +32,7 @@
 
 <md-list>
   <md-list-item *ngFor="let key of filteredKeys">
+    <img md-list-avatar *ngIf="secondHandItems.get(key).imgLink" [src]="secondHandItems.get(key).imgLink"/>
     <h4 md-line>
       {{secondHandItems.get(key).name}}
       <span *ngIf="secondHandItems.get(key).user">| {{secondHandItems.get(key).user}}</span>
@@ -44,8 +47,13 @@
 
 <button md-button (click)="addItem()">添加一笔</button>
 
-<md-card>
-  <md-card-title>编辑</md-card-title>
+<md-card *ngIf="currentItem">
+  <md-card-title>
+    编辑
+    <a md-icon-button (click)="currentItem = null;currentKey = null">
+      <md-icon>close</md-icon>
+    </a>
+  </md-card-title>
   <md-input-container>
     <input mdInput [(ngModel)]="currentItem.name" placeholder="物品名称" (blur)="submit()"/>
   </md-input-container>

@@ -25,11 +25,12 @@ export class SecondHandComponent implements OnDestroy {
   keys: string[] = [];
   secondHandItems: Map<string, SecondHand> = new Map<string, SecondHand>();
   filteredKeys: string[] = [];
-  currentItem: SecondHand = new SecondHand();
+  currentItem: SecondHand;
   currentKey: string;
   filterItem: SecondHand = new SecondHand();
   totalPrice: number = 0;
   totalCount: number = 0;
+  expanded: boolean = false;
 
   constructor() {
     this.ref.on('value', (snapshot) => {
@@ -106,13 +107,21 @@ export class SecondHandComponent implements OnDestroy {
       return;
     }
     if (this.currentKey) {
-      this.ref.child(this.currentKey).update(this.currentItem);
+      this.ref.child(this.currentKey).update(this.currentItem).then((newRef) => {
+        this.close();
+      });
     } else {
       this.ref.push(this.currentItem).then((newRef) => {
         this.currentKey = newRef.key();
         this.currentItem = this.secondHandItems.get(this.currentKey);
+        this.close();
       });
     }
+  }
+
+  close() {
+    this.currentItem = null;
+    this.currentKey = null;
   }
 
   addItem() {

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {Location} from '@angular/common';
+import { Router} from '@angular/router';
 import * as wilddog from 'wilddog';
 
 @Component({
@@ -16,10 +17,10 @@ export class NavComponent implements OnInit {
     return wilddog.auth().currentUser;
   }
 
-  constructor(router: Router) {
+  constructor(location: Location, router: Router) {
     wilddog.auth().onAuthStateChanged((user) => {
       if (!user) {
-        router.navigateByUrl('/register');
+        router.navigate(['/login'], { queryParams: { returnUrl: location.path() }});
       }
     });
   }

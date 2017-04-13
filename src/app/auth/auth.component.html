@@ -1,17 +1,15 @@
-<div class="main">
+<div class="main"  *ngIf="!currentUser">
   <md-card class="center">
-    <div *ngIf="!currentUser">
-      <md-input-container>
-        <input mdInput [(ngModel)]="email" placeholder="电子邮件"/>
-      </md-input-container>
-      <br>
-      <md-input-container>
-        <input mdInput [(ngModel)]="password" placeholder="密码" type="password"/>
-      </md-input-container>
-      <br>
-      <button md-raised-button (click)="registerWithEmail()" color="primary">注册</button>
-      <button md-raised-button (click)="signInWithEmail()">登陆</button>
-      <span class="error" *ngIf="error">{{error}}</span>
-    </div>
+    <md-input-container>
+      <input mdInput [(ngModel)]="email" placeholder="电子邮件"/>
+    </md-input-container>
+    <br>
+    <md-input-container>
+      <input mdInput [(ngModel)]="password" placeholder="密码" type="password"/>
+    </md-input-container>
+    <br>
+    <button md-raised-button (click)="registerWithEmail()" color="primary">注册</button>
+    <button md-raised-button (click)="signInWithEmail()">登陆</button>
+    <span class="error" *ngIf="error">{{error}}</span>
   </md-card>
 </div>

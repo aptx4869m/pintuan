@@ -28,7 +28,7 @@ wilddog.initializeApp(config);
 
 const appRoutes: Routes = [
   { path: '*', pathMatch: 'full', component: AuthComponent },
-  { path: 'register', component: AuthComponent },
+  { path: 'login', component: AuthComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'group-edit/:id', component: GroupEditorComponent },
   { path: 'group/:id', component: GroupJoinComponent },

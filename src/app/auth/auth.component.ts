@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import * as wilddog from 'wilddog';
 
 @Component({
@@ -9,10 +10,13 @@ import * as wilddog from 'wilddog';
 export class AuthComponent implements OnInit {
   email: string;
   password: string;
+  error: string;
 
-  constructor() {
+  constructor(router: Router) {
     wilddog.auth().onAuthStateChanged((user) => {
-      console.log(user);
+      if (user) {
+        router.navigateByUrl('profile');
+      }
     });
   }
 
@@ -26,20 +30,19 @@ export class AuthComponent implements OnInit {
 
   registerWithEmail() {
     if (!this.email || !this.password) return;
-    wilddog.auth().createUserWithEmailAndPassword(this.email, this.password);
+    this.error = null;
+    wilddog.auth().createUserWithEmailAndPassword(this.email, this.password)
+      .catch((error) => {
+        this.error = error.message;
+      });
   }
 
   signInWithEmail() {
     if (!this.email || !this.password) return;
-    wilddog.auth().signInWithEmailAndPassword(this.email, this.password);
-  }
-
-  signInWithWeibo() {
-    let provider = new wilddog.auth.WeiboAuthProvider();
-    wilddog.auth().signInWithPopup(provider);
-  }
-
-  signOut() {
-    wilddog.auth().signOut();
+    this.error = null;
+    wilddog.auth().signInWithEmailAndPassword(this.email, this.password)
+      .catch((error) => {
+        this.error = error.message;
+      });
   }
 }

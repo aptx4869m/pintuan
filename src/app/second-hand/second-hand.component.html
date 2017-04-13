@@ -3,10 +3,13 @@
   <md-card-title>
     过滤
     <p *ngIf="totalPrice || totalPrice">共计价格 {{totalPrice}} 日元 共计 {{totalCount}} 件</p>
-    <md-input-container>
-      <input mdInput [(ngModel)]="filterItem.user" placeholder="用户昵称"/>
-    </md-input-container>
-    <a md-icon-button (click)="expanded = !expanded"><md-icon>{{expanded? 'expand_less' : 'expand_more'}}</md-icon></a>
+    <md-card-subtitle>
+      <md-input-container>
+        <input mdInput [(ngModel)]="filterItem.user" placeholder="用户昵称"/>
+      </md-input-container>
+      <app-user-picker [(value)]="filterItem.uid"></app-user-picker>
+      <a md-icon-button (click)="expanded = !expanded"><md-icon>{{expanded? 'expand_less' : 'expand_more'}}</md-icon></a>
+    </md-card-subtitle>
   </md-card-title>
   <md-card-content *ngIf="expanded">
     <md-input-container>
@@ -35,13 +38,16 @@
     <img md-list-avatar *ngIf="secondHandItems.get(key).imgLink" [src]="secondHandItems.get(key).imgLink"/>
     <h4 md-line>
       {{secondHandItems.get(key).name}}
-      <span *ngIf="secondHandItems.get(key).user">| {{secondHandItems.get(key).user}}</span>
       <span *ngIf="secondHandItems.get(key).price"> | {{secondHandItems.get(key).price}}</span>
     </h4>
+    <p md-line *ngIf="secondHandItems.get(key).uid">
+      <app-user-picker [value]="secondHandItems.get(key).uid" [editable]="false" [displayAvatar]="false"></app-user-picker>
+    </p>
+    <p md-line *ngIf="!(secondHandItems.get(key).uid)">{{secondHandItems.get(key).user}}</p>
     <p md-line><a [href]="secondHandItems.get(key).link" target="_blank">{{secondHandItems.get(key).link}}</a></p>
     <p md-line>{{getDelivered(key)}} <span *ngIf="getPaid(key)">| {{getPaid(key)}}</span></p>
-    <button md-mini-fab (click)="editItem(key)"><md-icon>edit</md-icon></button>
-    <button md-mini-fab (click)="deleteItem(key)"><md-icon>delete</md-icon></button>
+    <button md-mini-fab (click)="editItem(key)" *ngIf="secondHandItems.get(key).uid === currentUser.uid"><md-icon>edit</md-icon></button>
+    <button md-mini-fab (click)="deleteItem(key)" *ngIf="secondHandItems.get(key).uid === currentUser.uid"><md-icon>delete</md-icon></button>
   </md-list-item>
 </md-list>
 
@@ -61,6 +67,7 @@
   <md-input-container>
     <input mdInput [(ngModel)]="currentItem.user" placeholder="用户昵称" (blur)="submit()" required/>
   </md-input-container>
+  <app-user-picker [(value)]="currentItem.uid"></app-user-picker>
   <br>
   <md-input-container>
     <input mdInput [(ngModel)]="currentItem.link" placeholder="链接" (blur)="submit()" required/>

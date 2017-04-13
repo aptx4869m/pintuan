@@ -32,6 +32,10 @@ export class SecondHandComponent implements OnDestroy {
   totalCount: number = 0;
   expanded: boolean = false;
 
+  get currentUser() {
+    return wilddog.auth().currentUser;
+  }
+
   constructor() {
     this.ref.on('value', (snapshot) => {
       this.secondHandItems.clear();
@@ -55,6 +59,9 @@ export class SecondHandComponent implements OnDestroy {
         continue;
       }
       if (this.filterItem.user && item.user !== this.filterItem.user) {
+        continue;
+      }
+      if (this.filterItem.uid && item.uid !== this.filterItem.uid) {
         continue;
       }
       if (this.filterItem.price && item.price !== this.filterItem.price) {
@@ -127,5 +134,7 @@ export class SecondHandComponent implements OnDestroy {
   addItem() {
     this.currentKey = null;
     this.currentItem = new SecondHand();
+    this.currentItem.uid = this.currentUser.uid;
+    this.currentItem.user = this.currentUser.displayName;
   }
 }

@@ -11,6 +11,9 @@
   min-height: 720px;
 }
 
-.error {
-  color: red;
+.avatar {
+  border-radius: 50%;
+  height: 100px;
+  margin-left: 8px;
+  margin-right: 8px;
 }

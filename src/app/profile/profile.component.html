@@ -1,0 +1,19 @@
+<div class="main">
+  <md-card class="center">
+  <img [src]="photoURL"
+       [alt]="displayName"
+       *ngIf="photoURL" class="avatar">
+  <md-input-container>
+    <input mdInput
+      [(ngModel)]="displayName"
+      placeholder="昵称"
+      (blur)="updateProfile()" />
+  </md-input-container>
+  <md-input-container>
+    <input mdInput
+      [(ngModel)]="photoURL"
+      placeholder="头像"
+      (blur)="updateProfile()" />
+  </md-input-container>
+</md-card>
+</div>

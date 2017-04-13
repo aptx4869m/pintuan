@@ -16,6 +16,9 @@ import { GroupItemEditorComponent } from './group-item-editor/group-item-editor.
 import { GroupPeopleEditorComponent } from './group-people-editor/group-people-editor.component';
 import { SecondHandComponent } from './second-hand/second-hand.component';
 import { AuthComponent } from './auth/auth.component';
+import { NavComponent } from './nav/nav.component';
+import { ProfileComponent } from './profile/profile.component';
+import { UserPickerComponent } from './user-picker/user-picker.component';
 
 var config = {
   syncURL: "https://aptx4869.wilddogio.com",
@@ -26,6 +29,7 @@ wilddog.initializeApp(config);
 const appRoutes: Routes = [
   { path: '*', pathMatch: 'full', component: AuthComponent },
   { path: 'register', component: AuthComponent },
+  { path: 'profile', component: ProfileComponent },
   { path: 'group-edit/:id', component: GroupEditorComponent },
   { path: 'group/:id', component: GroupJoinComponent },
   { path: 'second-hand', component: SecondHandComponent }
@@ -40,7 +44,10 @@ const appRoutes: Routes = [
     GroupItemEditorComponent,
     GroupPeopleEditorComponent,
     SecondHandComponent,
-    AuthComponent
+    AuthComponent,
+    NavComponent,
+    ProfileComponent,
+    UserPickerComponent
   ],
   imports: [
     BrowserModule,

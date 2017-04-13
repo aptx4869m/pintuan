@@ -1,0 +1,11 @@
+<md-toolbar color="primary" *ngIf="currentUser">
+  <img [src]="currentUser.photoURL"
+       [alt]="currentUser.email"
+       *ngIf="currentUser.photoURL" class="avatar">
+  {{ currentUser.displayName }}
+  <span *ngIf="!currentUser.displayName">({{currentUser.email}}) </span>
+  <span class="nav-spacer"></span>
+  <button md-button (click)="signOut()">
+    退出
+  </button>
+</md-toolbar>

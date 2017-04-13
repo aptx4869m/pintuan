@@ -1,0 +1,16 @@
+<div class="user-picker">
+  <md-select placeholder="选择用户" [(ngModel)]="selected" *ngIf="editable">
+    <md-option *ngIf="hasNull" [value]="null">--清除--</md-option>
+    <md-option *ngFor="let user of users" [value]="user.key">
+      {{ user.displayName }} ({{user.email}})
+    </md-option>
+  </md-select>
+  <div *ngIf="selectedUser">
+    <img [src]="selectedUser.photoURL"
+         [alt]="selectedUser.displayName"
+         *ngIf="selectedUser.photoURL && displayAvatar" class="avatar">
+    <div class="display-user">
+      {{selectedUser.displayName}}
+    </div>
+  </div>
+</div>

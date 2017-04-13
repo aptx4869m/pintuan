@@ -1,0 +1,14 @@
+.nav-spacer {
+  flex: 1 1 auto;
+}
+
+.nav-icon {
+  padding: 0 14px;
+}
+
+.avatar {
+  border-radius: 50%;
+  height: 50px;
+  margin-left: 8px;
+  margin-right: 8px;
+}

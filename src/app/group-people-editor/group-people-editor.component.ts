@@ -19,6 +19,10 @@ export class GroupPeopleEditorComponent implements OnDestroy {
   items: Map<string, Item> = new Map<string, Item>();
   itemKeys: string[] = [];
   isOpen: boolean = true;
+
+  peopleName: string;
+  peopleUid: string;
+
   @Input() isOwner: boolean = false;
 
   @Input()
@@ -70,7 +74,8 @@ export class GroupPeopleEditorComponent implements OnDestroy {
     this.ref.child(key).remove();
   }
 
-  addPeople(name: string) {
+  addPeople() {
+    let name = this.peopleName;
     // check name
     if (name && name.trim() !== '') {
       name = name.trim();

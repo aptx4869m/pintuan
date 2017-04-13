@@ -1,8 +1,8 @@
 
-<md-input-container>
-  <input mdInput #peopleName placeholder="昵称"/>
+<md-input-container *ngIf="isOwner">
+  <input mdInput [(ngModel)]="peopleName" placeholder="昵称"/>
 </md-input-container>
-<button md-button (click)="addPeople(peopleName.value); peopleName.value = ''">参团</button>
+<button md-button (click)="addPeople()">参团</button>
 
 <div *ngIf="isOwner">
   <md-list>

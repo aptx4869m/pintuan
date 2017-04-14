@@ -1,8 +1,15 @@
 
-<md-input-container *ngIf="isOwner">
-  <input mdInput [(ngModel)]="peopleName" placeholder="昵称"/>
-</md-input-container>
-<button md-button (click)="addPeople()">参团</button>
+<div *ngIf="isOwner">
+  <md-input-container>
+    <input mdInput [(ngModel)]="peopleName" placeholder="昵称"/>
+  </md-input-container>
+  <app-user-picker [(value)]="peopleUid"
+                   (displayName)="peopleName">
+  </app-user-picker>
+  <button md-button (click)="addPeople()">参团</button>
+</div>
+
+<button md-button (click)="addMe()" *ngIf="!isOwner">参团</button>
 
 <div *ngIf="isOwner">
   <md-list>
@@ -13,7 +20,6 @@
           <div *ngFor="let itemKey of itemKeys" class="item-number">
             {{items.get(itemKey).name}}
           </div>
-
         </div>
       </div>
       <a md-icon-button disabled><md-icon>edit</md-icon></a>

@@ -19,6 +19,7 @@ import { AuthComponent } from './auth/auth.component';
 import { NavComponent } from './nav/nav.component';
 import { ProfileComponent } from './profile/profile.component';
 import { UserPickerComponent } from './user-picker/user-picker.component';
+import { GroupListComponent } from './group-list/group-list.component';
 
 var config = {
   syncURL: "https://aptx4869.wilddogio.com",
@@ -30,6 +31,7 @@ const appRoutes: Routes = [
   { path: '*', pathMatch: 'full', component: AuthComponent },
   { path: 'login', component: AuthComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'groups', component: GroupListComponent },
   { path: 'group-edit/:id', component: GroupEditorComponent },
   { path: 'group/:id', component: GroupJoinComponent },
   { path: 'second-hand', component: SecondHandComponent }
@@ -47,7 +49,8 @@ const appRoutes: Routes = [
     AuthComponent,
     NavComponent,
     ProfileComponent,
-    UserPickerComponent
+    UserPickerComponent,
+    GroupListComponent
   ],
   imports: [
     BrowserModule,

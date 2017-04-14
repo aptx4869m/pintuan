@@ -21,15 +21,22 @@ export class UserPickerComponent implements OnInit {
     this.users.forEach((user) => {
       if (user.key == this._selected) {
         this.selectedUser = user;
+        this.displayNameChange.emit(user.displayName);
       }
     });
   }
 
   @Output() valueChange: EventEmitter<string> = new EventEmitter<string>();
+  @Output() displayNameChange: EventEmitter<string> = new EventEmitter<string>();
 
   set selected(selected: string) {
     this._selected = selected;
     this.valueChange.emit(this._selected);
+    this.users.forEach((user) => {
+      if (user.key == this._selected) {
+        this.displayNameChange.emit(user.displayName);
+      }
+    });
   }
 
   get selected(): string {

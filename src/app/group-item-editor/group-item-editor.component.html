@@ -8,8 +8,11 @@
 <md-list>
   <md-list-item *ngFor="let key of keys">
     <img [src]="items.get(key).img" *ngIf="items.get(key).img != null && items.get(key).img != ''" md-list-avatar />
-    <h4 md-line>{{items.get(key).name}}  </h4>
-    <p md-line *ngIf="items.get(key).price">价格： {{items.get(key).price}}</p>
+    <h4 md-line>{{items.get(key).name}} </h4>
+    <div md-line>
+      <span *ngIf="items.get(key).price">价格： {{items.get(key).price}} </span>
+      <span *ngIf="items.get(key).stock"> | 库存： {{items.get(key).stock}}</span>
+    </div>
     <a md-icon-button *ngIf="isOwner" (click)="editItem(key)"><md-icon>edit</md-icon></a>
     <a md-icon-button *ngIf="isOwner" (click)="deleteItem(key)"><md-icon>delete</md-icon></a>
   </md-list-item>

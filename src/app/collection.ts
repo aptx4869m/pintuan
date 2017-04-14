@@ -9,6 +9,7 @@ export class Collection {
   items: Map<string, Item> = new Map<string, Item>();
   peoples: Map<string, People> = new Map<string, People>();
   open: boolean = true;
+  key: string;
 
   constructor(value?: any) {
     if (value) {

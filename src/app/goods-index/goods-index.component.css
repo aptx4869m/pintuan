@@ -1,0 +1,29 @@
+.goods-card {
+  width: 300px;
+  margin: 16px;
+}
+
+.goods-cards {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
+.create-good {
+  position: absolute;
+  z-index: 1000;
+  right: 20px;
+  bottom: 20px;
+}
+
+.has-good {
+  color: green;
+}
+
+.no-good {
+  color: grey;
+}
+
+.want-good {
+  color: red;
+}

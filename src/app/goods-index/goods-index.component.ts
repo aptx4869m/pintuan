@@ -80,8 +80,6 @@ export class GoodsIndexComponent implements OnInit {
   }
 
   hasClass(key: string) {
-    console.log(key);
-    console.log(!!key);
     return !!key && this.hasList.includes(key) ? 'has-good' : 'no-good'
   }
 

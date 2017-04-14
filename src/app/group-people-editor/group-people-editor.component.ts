@@ -71,12 +71,10 @@ export class GroupPeopleEditorComponent implements OnDestroy {
   }
 
   checkUser() {
-    console.log(`checku ser`);
     let me = this.peoples.get(this.currentUserId);
     if (me != null) {
       this.people = me;
       this.peopleKey = this.currentUserId;
-      console.log(`me`);
     }
   }
 

@@ -49,11 +49,9 @@ export class GroupEditorComponent implements OnInit {
     if (name && name.trim() !== '') {
       name = name.trim();
       if (!this.collection.items.get(name)) {
-        console.log(name);
         this.collection.items.set(name, new Item(name));
       }
     }
-    console.log(this.collection.items);
     this._calculateItems();
   }
 
@@ -72,7 +70,6 @@ export class GroupEditorComponent implements OnInit {
   }
 
   deletePeople(name: string) {
-    console.log(name);
     this.collection.peoples.set(name, null);
     if (this.currentPeople.name === name) {
       this.currentPeople = null;
@@ -124,7 +121,6 @@ export class GroupEditorComponent implements OnInit {
   _calculateItems() {
     let items = [];
     this.collection.items.forEach((item, name) => {
-      console.log(item);
       items.push(item);
     });
     this.localItems = items;

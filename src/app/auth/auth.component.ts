@@ -25,7 +25,6 @@ export class AuthComponent implements OnInit {
 
   ngOnInit() {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-    console.log(this.returnUrl);
   }
 
   get currentUser() {

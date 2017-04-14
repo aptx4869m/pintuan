@@ -35,7 +35,6 @@ export class GroupInfoEditorComponent implements OnDestroy {
 
   submit() {
     if (this.isOwner && this.ref) {
-      console.log(this.collection);
       this.ref.update(this.collection);
     }
   }

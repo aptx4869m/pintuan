@@ -11,6 +11,21 @@
 
 <button md-button (click)="addMe()" *ngIf="!isOwner">参团</button>
 
+<md-card *ngIf="people && peopleKey">
+  <md-card-header>
+    <md-card-title>{{people.name}}</md-card-title>
+  </md-card-header>
+  <md-card-content>
+    <md-input-container *ngFor="let itemKey of itemKeys">
+      <input mdInput [(ngModel)]="people.buy[itemKey]" [placeholder]="items.get(itemKey).name" type="number"
+             (blur)="submit(peopleKey, itemKey, people.buy[itemKey])"  [disabled]="!isOwner && !isOpen"/>
+    </md-input-container>
+  </md-card-content>
+  <a md-icon-button (click)="deletePeople(peopleKey)"><md-icon>delete</md-icon></a>
+  <a md-icon-button (click)="close()"><md-icon>close</md-icon></a>
+  <button md-raised-button color="primary" (click)="submitFinal()">提交</button>
+</md-card>
+
 <div *ngIf="isOwner">
   <md-list>
     <md-list-item>
@@ -39,17 +54,3 @@
     </md-list-item>
   </md-list>
 </div>
-
-<md-card *ngIf="people && peopleKey">
-  <md-card-header>
-    <md-card-title>{{people.name}}</md-card-title>
-  </md-card-header>
-  <md-card-content>
-    <md-input-container *ngFor="let itemKey of itemKeys">
-      <input mdInput [(ngModel)]="people.buy[itemKey]" [placeholder]="items.get(itemKey).name" type="number"
-             (blur)="submit(peopleKey, itemKey, people.buy[itemKey])"  [disabled]="!isOwner && !isOpen"/>
-    </md-input-container>
-  </md-card-content>
-  <a md-icon-button (click)="deletePeople(peopleKey)"><md-icon>delete</md-icon></a>
-  <a md-icon-button (click)="close()"><md-icon>close</md-icon></a>
-</md-card>

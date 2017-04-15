@@ -7,3 +7,7 @@
 .items {
   display: flex;
 }
+
+md-card {
+  margin-bottom: 20px;
+}

@@ -21,9 +21,8 @@
              (blur)="submit(peopleKey, itemKey, people.buy[itemKey])"  [disabled]="!isOwner && !isOpen"/>
     </md-input-container>
   </md-card-content>
-  <a md-icon-button (click)="deletePeople(peopleKey)"><md-icon>delete</md-icon></a>
-  <a md-icon-button (click)="close()"><md-icon>close</md-icon></a>
-  <button md-raised-button color="primary" (click)="submitFinal()">提交</button>
+  <button md-raised-button color="warn" (click)="deletePeople(peopleKey)" [disabled]="!isOpen">删除</button>
+  <button md-raised-button color="primary" (click)="close()" [disabled]="!isOpen">提交</button>
 </md-card>
 
 <div *ngIf="isOwner">

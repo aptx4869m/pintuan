@@ -9,19 +9,23 @@ import {Item} from '../item';
   styleUrls: ['./group-people-editor.component.css']
 })
 export class GroupPeopleEditorComponent implements OnDestroy {
+  // this group related
   ref: any;
-  itemsRef: any;
   _key: string;
-  peopleKey: string;
-  people: People;
-  peoples: Map<string, People> = new Map<string, People>();
-  keys: string[] = [];
+  isOpen: boolean = false;
+  // items
+  itemsRef: any;
   items: Map<string, Item> = new Map<string, Item>();
   itemKeys: string[] = [];
-  isOpen: boolean = true;
 
+  peopleKey: string;
+  people: People;
+  // people summary info
+  peoples: Map<string, People> = new Map<string, People>();
+  peopleKeys: string[] = [];
   peopleName: string;
-  peopleUid: string;
+
+  isEditMode: boolean = false;
 
   @Input() isOwner: boolean = false;
 
@@ -31,37 +35,9 @@ export class GroupPeopleEditorComponent implements OnDestroy {
   }
   set key(value: string) {
     this._key = value;
-    this.ref = wilddog.sync().ref('groups').child(this._key).child('peoples');
-    this.ref.on('value', (snapshot) => {
-      this.peoples.clear();
-      this.keys = [];
-      snapshot.forEach((childSnapshot) => {
-        let tempKey = childSnapshot.key();
-        this.keys.push(tempKey);
-        this.peoples.set(tempKey, childSnapshot.val());
-        if (!this.peoples.get(tempKey).buy) {
-          this.peoples.get(tempKey).buy = new Map<string, number>();
-        }
-      });
-      if (this.peopleKey) {
-        this.people = this.peoples.get(this.peopleKey);
-      }
-      if (!this.isOwner) {
-        this.checkUser();
-      }
-    });
-    this.itemsRef = wilddog.sync().ref('groups').child(this._key).child('items');;
-    this.itemsRef.on('value', (snapshot) => {
-      this.items.clear();
-      this.itemKeys = [];
-      snapshot.forEach((childSnapshot) => {
-        this.itemKeys.push(childSnapshot.key());
-        this.items.set(childSnapshot.key(), childSnapshot.val());
-      });
-    });
-    wilddog.sync().ref('groups').child(this._key).child('info/open').on('value', (snapshot) => {
-      this.isOpen = snapshot.val();
-    });
+    this._fetchPeoples();
+    this._fetchItems();
+    this._fetchOpenInfo();
   }
 
   constructor() { }
@@ -107,12 +83,12 @@ export class GroupPeopleEditorComponent implements OnDestroy {
   }
 
   addPeople() {
-    if (this.isOwner && this.peopleUid) {
+    if (this.isOwner && this.peopleKey) {
       // not owner. Can only add self
-      this.setPeopleKey(this.peopleUid);
+      this.setPeopleKey(this.peopleKey);
       if (!this.people) {
-        this.ref.child(this.peopleUid).update({'name': this.peopleName}).then((newRef) => {
-          this.setPeopleKey(this.peopleUid);
+        this.ref.child(this.peopleKey).update({'name': this.peopleName}).then((newRef) => {
+          this.setPeopleKey(this.peopleKey);
         });
       }
       return;
@@ -158,6 +134,7 @@ export class GroupPeopleEditorComponent implements OnDestroy {
     if (this.peopleKey) {
       this.people = this.peoples.get(this.peopleKey);
     }
+    this.isEditMode = true;
   }
 
   submit(peopleKey: string, itemKey: string, value: number) {
@@ -165,7 +142,49 @@ export class GroupPeopleEditorComponent implements OnDestroy {
   }
 
   close() {
+    console.log(this.people);
     this.peopleKey = null;
     this.people = null;
+  }
+
+  _fetchOpenInfo() {
+    wilddog.sync().ref('groups').child(this._key).child('info/open').on('value', (snapshot) => {
+      this.isOpen = snapshot.val();
+    });
+  }
+
+  _fetchItems() {
+    this.itemsRef = wilddog.sync().ref('groups').child(this._key).child('items');;
+    this.itemsRef.on('value', (snapshot) => {
+      this.items.clear();
+      this.itemKeys = [];
+      snapshot.forEach((childSnapshot) => {
+        this.itemKeys.push(childSnapshot.key());
+        this.items.set(childSnapshot.key(), childSnapshot.val());
+      });
+    });
+  }
+
+  _fetchPeoples() {
+    this.ref = wilddog.sync().ref('groups').child(this._key).child('peoples');
+    this.ref.on('value', (snapshot) => {
+      this.peoples.clear();
+      this.peopleKeys = [];
+      snapshot.forEach((childSnapshot) => {
+        let tempKey = childSnapshot.key();
+        this.peopleKeys.push(tempKey);
+        this.peoples.set(tempKey, childSnapshot.val());
+        if (!this.peoples.get(tempKey).buy) {
+          this.peoples.get(tempKey).buy = new Map<string, number>();
+        }
+      });
+
+      if (this.peopleKey) {
+        this.people = this.peoples.get(this.peopleKey);
+      }
+      if (!this.isOwner) {
+        this.checkUser();
+      }
+    });
   }
 }

@@ -3,27 +3,28 @@
   <md-input-container>
     <input mdInput [(ngModel)]="peopleName" placeholder="昵称"/>
   </md-input-container>
-  <app-user-picker [(value)]="peopleUid"
+  <app-user-picker [(value)]="peopleKey"
                    (displayName)="peopleName">
   </app-user-picker>
-  <button md-button (click)="addPeople()">参团</button>
+  <button md-raised-button (click)="addPeople()"
+          color="primary">参团</button>
 </div>
 
-<button md-button (click)="addMe()" *ngIf="!isOwner">参团</button>
+<button md-raised-button
+        (click)="addMe()"
+        *ngIf="!isOwner"
+        color="primary">参团</button>
 
-<md-card *ngIf="people && peopleKey">
-  <md-card-header>
-    <md-card-title>{{people.name}}</md-card-title>
-  </md-card-header>
-  <md-card-content>
-    <md-input-container *ngFor="let itemKey of itemKeys">
-      <input mdInput [(ngModel)]="people.buy[itemKey]" [placeholder]="items.get(itemKey).name" type="number"
-             (blur)="submit(peopleKey, itemKey, people.buy[itemKey])"  [disabled]="!isOwner && !isOpen"/>
-    </md-input-container>
-  </md-card-content>
-  <button md-raised-button color="warn" (click)="deletePeople(peopleKey)" [disabled]="!isOpen">删除</button>
-  <button md-raised-button color="primary" (click)="close()" [disabled]="!isOpen">提交</button>
-</md-card>
+<app-group-people-item-editor
+    [people]="people"
+    [peopleKey]="peopleKey"
+    [itemKeys]="itemKeys"
+    [items]="items"
+    [isOpen]="isOpen"
+    [isOwner]="isOwner"
+    [groupKey]="key"
+    [isEditMode]="isEditMode">
+</app-group-people-item-editor>
 
 <div *ngIf="isOwner">
   <md-list>
@@ -39,17 +40,16 @@
       <a md-icon-button disabled><md-icon>edit</md-icon></a>
       <a md-icon-button disabled><md-icon>delete</md-icon></a>
     </md-list-item>
-    <md-list-item *ngFor="let key of keys">
-      <div md-line>
-        <div class="items">
-          <h4 class="item-number">{{peoples.get(key).name}}</h4>
-          <div *ngFor="let itemKey of itemKeys" class="item-number">
-            {{peoples.get(key).buy[itemKey]}}
-          </div>
-        </div>
-      </div>
-      <a md-icon-button (click)="editPeople(key)"><md-icon>edit</md-icon></a>
-      <a md-icon-button (click)="deletePeople(key)"><md-icon>delete</md-icon></a>
-    </md-list-item>
+    <app-group-people-item-editor *ngFor="let key of peopleKeys"
+        [people]="peoples.get(key)"
+        [peopleKey]="key"
+        [itemKeys]="itemKeys"
+        [items]="items"
+        [isOpen]="isOpen"
+        [isOwner]="isOwner"
+        [groupKey]="key"
+        [isEditMode]="isEditMode"
+        [isTableView]="true">
+    </app-group-people-item-editor>
   </md-list>
 </div>

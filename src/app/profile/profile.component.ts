@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {MdSnackBar} from '@angular/material';
 import * as wilddog from 'wilddog';
 
 @Component({
@@ -10,7 +11,7 @@ export class ProfileComponent implements OnInit {
   photoURL: string;
   displayName: string;
 
-  constructor() { }
+  constructor(public snackBar: MdSnackBar) { }
 
   ngOnInit() {
     wilddog.auth().onAuthStateChanged((user) => {
@@ -20,7 +21,6 @@ export class ProfileComponent implements OnInit {
   }
 
   updateProfile() {
-
     let profile = {
       'photoURL': this.photoURL,
       'displayName': this.displayName
@@ -32,10 +32,10 @@ export class ProfileComponent implements OnInit {
         'displayName': this.displayName,
         'email': wilddog.auth().currentUser.email
       });
-      console.info('update user ->', user);
+      this.snackBar.open('更新好了', null, {duration: 2000});
     })
     .catch((err) => {
-        console.info("update user info failed.", err);
+      this.snackBar.open(`错误${err}`, null, {duration: 2000});
     });
   }
 }

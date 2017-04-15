@@ -13,7 +13,7 @@ export class GoodsIndexComponent implements OnInit {
   hasList: string[] = [];
 
   showCreateGood: boolean = false;
-  editGoods: Goods;
+  editGoods: Goods = new Goods();
 
   get currentUser() {
     return wilddog.auth().currentUser ?
@@ -77,6 +77,7 @@ export class GoodsIndexComponent implements OnInit {
       wilddog.sync().ref('goods').child(this.editGoods.key)
         .update(this.editGoods);
     }
+    this.editGoods = new Goods();
   }
 
   hasClass(key: string) {

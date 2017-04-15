@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import {MdSnackBar} from '@angular/material';
 import * as wilddog from 'wilddog';
 import {Collection} from '../collection';
 
@@ -13,7 +14,6 @@ export class GroupListComponent implements OnInit {
   groups: Collection[];
 
   // create new Group
-  newGroupKey: string;
   newGroupName: string;
   newGroupImg: string;
   showCreateGroup: boolean = false;
@@ -22,25 +22,31 @@ export class GroupListComponent implements OnInit {
     return wilddog.auth().currentUser.uid;
   }
 
-  constructor(public router: Router) {
+  constructor(public router: Router, public snackbar: MdSnackBar) {
     this.ref = wilddog.sync().ref('groups');
     this.ref.on('value', (snapshot) => {
       this.groups = [];
       snapshot.forEach((childSnapshot) => {
-        let group = childSnapshot.val().info as Collection;
-        group.key = childSnapshot.key();
-        this.groups.push(group);
+        if (childSnapshot) {
+          let group = childSnapshot.val().info as Collection;
+          group.key = childSnapshot.key();
+          this.groups.push(group);
+        }
       })
     });
   }
 
   addGroup() {
     this.showCreateGroup = false;
-    let key = this.ref.child(this.newGroupKey).set({
-      owner: this.currentUser,
-      name: this.newGroupName,
-    }).key;
-    this.router.navigateByUrl('/group/' + key);
+    this.ref.push({
+      info: {
+        owner: this.currentUser,
+        name: this.newGroupName,
+      }
+    }).then((newRef) => {
+      this.router.navigateByUrl('/group/' + newRef.key());
+    }).catch((err) => this.snackbar.open(`错误${err}`, null, {duration: 2000}));
+
   }
 
   ngOnInit() {

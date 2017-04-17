@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import {MdSnackBar} from '@angular/material';
 import * as wilddog from 'wilddog';
 import {Collection} from '../collection';
+import {AdminService} from '../admin.service';
 
 @Component({
   selector: 'app-group-list',
@@ -18,11 +19,15 @@ export class GroupListComponent implements OnInit {
   newGroupImg: string;
   showCreateGroup: boolean = false;
 
+  isAdmin: boolean = false;
+
   get currentUser() {
     return wilddog.auth().currentUser.uid;
   }
 
-  constructor(public router: Router, public snackbar: MdSnackBar) {
+  constructor(public router: Router,
+      public snackbar: MdSnackBar,
+      adminService: AdminService) {
     this.ref = wilddog.sync().ref('groups');
     this.ref.on('value', (snapshot) => {
       this.groups = [];
@@ -37,6 +42,7 @@ export class GroupListComponent implements OnInit {
         }
       })
     });
+    adminService.checkGlobal().then((value) => this.isAdmin = value);
   }
 
   addGroup() {

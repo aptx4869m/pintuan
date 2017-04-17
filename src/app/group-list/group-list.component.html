@@ -16,7 +16,7 @@
          查看
        </a>
       <a md-button routerLink="/group-edit/{{group.key}}"
-         *ngIf="group.owner === currentUser">
+         *ngIf="group.owner === currentUser || isAdmin">
          编辑
        </a>
     </md-card-actions>

@@ -9,6 +9,7 @@ import * as wilddog from 'wilddog';
 
 import {UserService} from './user.service';
 import {GoodsService} from './goods.service';
+import {AdminService} from './admin.service';
 import { AppComponent } from './app.component';
 import { GroupEditorComponent, GroupJoinComponent } from './group-editor/group-editor.component';
 import { GroupInfoEditorComponent } from './group-info-editor/group-info-editor.component';
@@ -23,6 +24,7 @@ import { GroupListComponent } from './group-list/group-list.component';
 import { GoodsIndexComponent } from './goods-index/goods-index.component';
 import { GroupPeopleItemEditorComponent } from './group-people-item-editor/group-people-item-editor.component';
 import { GroupSingleItemEditorComponent } from './group-single-item-editor/group-single-item-editor.component';
+import { AdminManagerComponent } from './admin-manager/admin-manager.component';
 
 var config = {
   syncURL: "https://aptx4869.wilddogio.com",
@@ -38,7 +40,8 @@ const appRoutes: Routes = [
   { path: 'index', component: GoodsIndexComponent },
   { path: 'group-edit/:id', component: GroupEditorComponent },
   { path: 'group/:id', component: GroupJoinComponent },
-  { path: 'second-hand', component: SecondHandComponent }
+  { path: 'bought', component: SecondHandComponent },
+  { path: 'admin/:id', component: AdminManagerComponent}
 ];
 
 @NgModule({
@@ -57,7 +60,8 @@ const appRoutes: Routes = [
     GroupListComponent,
     GoodsIndexComponent,
     GroupPeopleItemEditorComponent,
-    GroupSingleItemEditorComponent
+    GroupSingleItemEditorComponent,
+    AdminManagerComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +71,7 @@ const appRoutes: Routes = [
     MaterialModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [],
+  providers: [AdminService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

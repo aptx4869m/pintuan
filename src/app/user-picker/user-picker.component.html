@@ -5,11 +5,11 @@
       {{ user.displayName }} ({{user.email}})
     </md-option>
   </md-select>
-  <span *ngIf="selectedUser">
+  <div *ngIf="selectedUser" class="selected-user">
     <img [src]="selectedUser.photoURL"
          [alt]="selectedUser.displayName"
          class="avatar"
          *ngIf="selectedUser.photoURL && displayAvatar" class="avatar">
-    {{selectedUser.displayName}}
-  </span>
+    <div class="user-name">{{selectedUser.displayName}}</div>
+  </div>
 </div>

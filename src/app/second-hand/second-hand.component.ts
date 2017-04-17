@@ -1,8 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
+import { Router} from '@angular/router';
 import {SecondHand} from '../second-hand';
+import {AdminService} from '../admin.service';
+
 import * as wilddog from 'wilddog';
-
-
 
 @Component({
   selector: 'app-second-hand',
@@ -32,11 +33,13 @@ export class SecondHandComponent implements OnDestroy {
   totalCount: number = 0;
   expanded: boolean = false;
 
+  isAdmin: boolean = false;
+
   get currentUser() {
     return wilddog.auth().currentUser;
   }
 
-  constructor() {
+  constructor(adminService: AdminService, router: Router) {
     this.ref.on('value', (snapshot) => {
       this.secondHandItems.clear();
       this.keys = [];
@@ -46,6 +49,12 @@ export class SecondHandComponent implements OnDestroy {
         this.keys.push(childSnapshot.key());
         this.filteredKeys = this.keys.slice();
       });
+    });
+    adminService.checkGlobal().then((value) => {
+      this.isAdmin = value;
+      if (value === true) {
+        router.navigateByUrl('./');
+      }
     });
   }
 
@@ -102,6 +111,9 @@ export class SecondHandComponent implements OnDestroy {
   }
 
   deleteItem(key: string) {
+    if (!this.isAdmin) {
+      return;
+    }
     this.ref.child(key).remove();
   }
 
@@ -110,6 +122,9 @@ export class SecondHandComponent implements OnDestroy {
   }
 
   submit() {
+    if (!this.isAdmin) {
+      return;
+    }
     if (!this.currentItem.price || !this.currentItem.link || !this.currentItem.name || !this.currentItem.user) {
       return;
     }
@@ -132,6 +147,9 @@ export class SecondHandComponent implements OnDestroy {
   }
 
   addItem() {
+    if (!this.isAdmin) {
+      return;
+    }
     this.currentKey = null;
     this.currentItem = new SecondHand();
     this.currentItem.uid = this.currentUser.uid;

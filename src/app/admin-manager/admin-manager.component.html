@@ -1,0 +1,14 @@
+<app-user-picker [(value)]="peopleKey">
+</app-user-picker>
+<button md-raised-button color="primary" (click)="addPeople()">加入组织</button>
+
+<md-list>
+
+  <md-list-item *ngFor="let user of users">
+    <app-user-picker
+                     [value]="user"
+                     [editable]="false">
+    </app-user-picker>
+    <button md-button color="warn" (click)="deletePeople(user)">踢出去</button>
+  </md-list-item>
+</md-list>

@@ -1,0 +1,48 @@
+{{people}} {{isEditMode}} {{isEditable}}
+<md-card *ngIf="people && isEditMode && isEditable">
+  <md-card-header>
+    <md-card-title>{{people.name}}</md-card-title>
+  </md-card-header>
+  <md-card-content>
+    <md-input-container *ngFor="let itemKey of itemKeys">
+      <input mdInput [(ngModel)]="people.buy[itemKey]"
+            [placeholder]="items.get(itemKey).name" type="number"
+            [disabled]="!isOwner && !isOpen"/>
+    </md-input-container>
+  </md-card-content>
+  <md-card-actions>
+    <button md-raised-button (click)="close()">取消</button>
+    <button md-raised-button color="primary" (click)="submit()" [disabled]="!isEditable">提交</button>
+    <button md-raised-button color="warn" (click)="deletePeople()" [disabled]="!isEditable">删除</button>
+  </md-card-actions>
+</md-card>
+
+<md-card *ngIf="people && !isTableView && !isEditMode">
+  <md-card-header>
+    <md-card-title>{{people.name}}</md-card-title>
+  </md-card-header>
+  <md-card-content>
+    <span *ngFor="let itemKey of itemKeys; let i = index">
+      <span *ngIf="!!people.buy[itemKey]" >
+        <span *ngIf="i > 0"> | </span>
+        {{items.get(itemKey).name}}: {{people.buy[itemKey]}}
+      </span>
+    </span>
+  </md-card-content>
+  <md-card-actions>
+    <button md-raised-button color="primary" (click)="isEditMode = true" [disabled]="!isEditable">编辑</button>
+  </md-card-actions>
+</md-card>
+
+<md-list-item *ngIf="people && isTableView && !isEditMode">
+  <div md-line>
+    <div class="items">
+      <h4 class="item-number">{{people.name}}</h4>
+      <div *ngFor="let itemKey of itemKeys" class="item-number">
+        {{people.buy[itemKey]}}
+      </div>
+    </div>
+  </div>
+  <a md-icon-button (click)="isEditMode = true" [disabled]="!isEditable"><md-icon>edit</md-icon></a>
+  <a md-icon-button (click)="deletePeople()" [disabled]="!isEditable"><md-icon>delete</md-icon></a>
+</md-list-item>

@@ -1,0 +1,33 @@
+<md-list-item *ngIf="!!itemKey && !!item && !(isOwner && isEditMode)">
+  <img [src]="item.img" *ngIf="item.img != null && item.img != ''" md-list-avatar />
+
+  <div md-line>
+    <b>{{item.name}} </b>
+    <span *ngIf="item.price"> | 价格： {{item.price}} </span>
+    <span *ngIf="item.stock"> | 库存： {{item.stock}}</span>
+  </div>
+  <a md-icon-button *ngIf="isOwner" (click)="edit()"><md-icon>edit</md-icon></a>
+  <a md-icon-button *ngIf="isOwner" (click)="delete()"><md-icon>delete</md-icon></a>
+</md-list-item>
+
+<md-card *ngIf="!!item && isOwner && isEditMode">
+  编辑
+  <md-card-header>
+    <img [src]="item.img" *ngIf="item.img" md-card-avatar />
+    <md-card-title>{{item.name}}</md-card-title>
+  </md-card-header>
+  <md-card-content>
+    <md-input-container>
+      <input mdInput [(ngModel)]="item.img" placeholder="图片地址" />
+    </md-input-container>
+    <md-input-container>
+      <input mdInput [(ngModel)]="item.price" placeholder="价格" type="number"/>
+    </md-input-container>
+    <md-input-container>
+      <input mdInput [(ngModel)]="item.stock" placeholder="库存" type="number"/>
+    </md-input-container>
+    <button md-raised-button (click)="close()">取消</button>
+    <button md-raised-button (click)="delete()" color="warn">删除</button>
+    <button md-raised-button (click)="submit()" color="primary">提交</button>
+  </md-card-content>
+</md-card>

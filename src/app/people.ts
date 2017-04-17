@@ -10,4 +10,8 @@ export class People {
   initialize() {
     if (!this.buy) this.buy = new Map<string, number>();
   }
+
+  copy(value: People) {
+    this.buy = value.buy;
+  }
 }

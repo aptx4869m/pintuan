@@ -2,3 +2,7 @@
   max-width: 50px;
   border-radius: 50%;
 }
+
+.user-picker {
+  display: inline-block;
+}

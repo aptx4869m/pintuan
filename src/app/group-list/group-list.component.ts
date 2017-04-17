@@ -28,9 +28,12 @@ export class GroupListComponent implements OnInit {
       this.groups = [];
       snapshot.forEach((childSnapshot) => {
         if (childSnapshot) {
+
           let group = childSnapshot.val().info as Collection;
-          group.key = childSnapshot.key();
-          this.groups.push(group);
+          if (group) {
+            group.key = childSnapshot.key();
+            this.groups.push(group);
+          }
         }
       })
     });

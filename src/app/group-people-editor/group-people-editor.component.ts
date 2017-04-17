@@ -1,5 +1,6 @@
 import { Component, OnDestroy, Input } from '@angular/core';
 import * as wilddog from 'wilddog';
+import {MdSnackBar} from '@angular/material';
 import {People} from '../people';
 import {Item} from '../item';
 
@@ -40,26 +41,23 @@ export class GroupPeopleEditorComponent implements OnDestroy {
     this._fetchOpenInfo();
   }
 
-  constructor() { }
+  constructor(public snackbar: MdSnackBar) { }
 
   get currentUserId() {
     return wilddog.auth().currentUser ? wilddog.auth().currentUser.uid : null;
   }
 
-  checkUser() {
-    let me = this.peoples.get(this.currentUserId);
-    if (me != null) {
-      this.people = me;
-      this.peopleKey = this.currentUserId;
-    }
-  }
-
   ngOnInit() {
     wilddog.auth().onAuthStateChanged((user) => {
-      if (user != null && !this.isOwner) {
-        this.checkUser();
-      }
+      this.checkUser();
     })
+  }
+
+  checkUser() {
+    let user = wilddog.auth().currentUser;
+    if (user != null && !this.isOwner) {
+      this.setPeopleKeyName(user.uid, user.displayName);
+    }
   }
 
   ngOnDestroy() {
@@ -72,68 +70,75 @@ export class GroupPeopleEditorComponent implements OnDestroy {
     this.ref.child(key).remove();
   }
 
-  setPeopleKey(uid: string) {
-    this.peoples.forEach((p, k) => {
-      if (k == uid) {
+  setPeopleKeyName(uid: string, name: string) {
+    this.peoples.forEach((v, k) => {
+      if ((!!uid && k == uid) || (!!name && v.name == name)) {
         this.peopleKey = k;
-        this.people = p;
+        this.people = v;
+        this.isEditMode = true;
         return;
       }
     });
   }
 
+  _processPeopleName() {
+    if (!!this.peopleName && this.peopleName.trim() !== '') {
+      this.peopleName = this.peopleName.trim();
+    } else {
+      this.peopleName = null;
+    }
+  }
+
   addPeople() {
-    if (this.isOwner && this.peopleKey) {
-      // not owner. Can only add self
-      this.setPeopleKey(this.peopleKey);
-      if (!this.people) {
-        this.ref.child(this.peopleKey).update({'name': this.peopleName}).then((newRef) => {
-          this.setPeopleKey(this.peopleKey);
-        });
-      }
+    if (!this.isOwner) {
       return;
     }
+    this.people = null;
+    this._processPeopleName();
+    console.log(this.peopleKey);
+    console.log(this.peopleName);
+    this.setPeopleKeyName(this.peopleKey, this.peopleName);
 
-    let name = this.peopleName;
-    // check name
-    if (name && name.trim() !== '') {
-      name = name.trim();
-      this.peopleKey = '';
-      this.people = null;
-      this.peoples.forEach((p, k) => {
-        if (p.name === name) {
-          this.peopleKey = k;
-          this.people = p;
-        }
-      });
-      if (!this.people) {
-        this.ref.push({'name': name}).then((newRef) => {
-          this.setPeopleKey(newRef.key());
-        });
-      }
+    if (!this.people) {
+      this._addPeople(this.peopleKey, this.peopleName);
     }
   }
 
   addMe() {
-    this.setPeopleKey(this.currentUserId);
-    if (this.people) {
-      return;
+    this.peopleKey = wilddog.auth().currentUser.uid;
+    this.peopleName = wilddog.auth().currentUser.displayName;
+    this.setPeopleKeyName(this.peopleKey, this.peopleName);
+    if (!this.people) {
+      this._addPeople(this.peopleKey, this.peopleName);
     }
-    this.ref.child(this.currentUserId)
-      .update({'name': wilddog.auth().currentUser.displayName})
-      .then((newRef) => {
-        this.setPeopleKey(this.currentUserId);
-    })
-    .catch(function(err){
-       console.info('Add node failed', err.code, err);
-    });
+  }
+
+  _addPeople(uid: string, name: string) {
+    let action;
+    if (!!uid && !!name) {
+      action = this.ref.child(uid).set({name: name}).then((newRef) => {
+        this.setPeopleKeyName(uid, name);
+        this.snackbar.open(`${name} 已参团`, null, {duration: 2000});
+        this.isEditMode = true;
+      });
+    } else if (!!name){
+      action = this.ref.push({name: name}).then((newRef) => {
+        console.log(newRef);
+
+        this.setPeopleKeyName(newRef.key(), null);
+        this.snackbar.open(`${name} 已参团`, null, {duration: 2000});
+        this.isEditMode = true;
+      });
+    }
+    if (!!action) {
+      action.catch((err) => {
+        this.snackbar.open(`错误: ${err}`, null, {duration: 2000});
+      });
+    }
   }
 
   editPeople(key: string) {
-    this.peopleKey = key;
-    if (this.peopleKey) {
-      this.people = this.peoples.get(this.peopleKey);
-    }
+    this.setPeopleKeyName(key, null);
     this.isEditMode = true;
   }
 
@@ -142,9 +147,21 @@ export class GroupPeopleEditorComponent implements OnDestroy {
   }
 
   close() {
-    console.log(this.people);
+    if (this.isOwner) {
+      this._clear();
+    }
+  }
+
+  onDelete(key: string) {
+    if (!this.isOwner && wilddog.auth().currentUser.uid === key) {
+      this._clear();
+    }
+  }
+
+  _clear() {
     this.peopleKey = null;
     this.people = null;
+    this.peopleName = null;
   }
 
   _fetchOpenInfo() {
@@ -177,14 +194,8 @@ export class GroupPeopleEditorComponent implements OnDestroy {
         if (!this.peoples.get(tempKey).buy) {
           this.peoples.get(tempKey).buy = new Map<string, number>();
         }
-      });
-
-      if (this.peopleKey) {
-        this.people = this.peoples.get(this.peopleKey);
-      }
-      if (!this.isOwner) {
         this.checkUser();
-      }
+      });
     });
   }
 }

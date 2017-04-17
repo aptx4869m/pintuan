@@ -1,4 +1,5 @@
 import { Component, OnDestroy, Input } from '@angular/core';
+import {MdSnackBar} from '@angular/material'
 import * as wilddog from 'wilddog';
 import {Item} from '../item';
 
@@ -11,13 +12,13 @@ import {Item} from '../item';
 export class GroupItemEditorComponent implements OnDestroy {
   ref: any;
   _key: string;
-  itemKey: string;
-  item: Item;
+  editItem: Item;
   items: Map<string, Item> = new Map<string, Item>();
-  keys: string[] = [];
+  itemKeys: string[] = [];
+  currentKey: string;
   @Input() isOwner: boolean = false;
 
-  constructor() { }
+  constructor(public snackbar: MdSnackBar) { }
 
   ngOnDestroy() {
     this.ref.off();
@@ -32,54 +33,29 @@ export class GroupItemEditorComponent implements OnDestroy {
     this.ref = wilddog.sync().ref('groups').child(this._key).child('items');
     this.ref.on('value', (snapshot) => {
       this.items.clear();
-      this.keys = [];
+      this.itemKeys = [];
       snapshot.forEach((childSnapshot) => {
-        this.keys.push(childSnapshot.key());
+        this.itemKeys.push(childSnapshot.key());
         this.items.set(childSnapshot.key(), childSnapshot.val());
       });
-      if (this.itemKey) {
-        this.item = this.items.get(this.itemKey);
-      }
     });
-  }
-
-  deleteItem(key: string) {
-    this.ref.child(key).remove();
   }
 
   addItem(name: string) {
     // check name
-    if (name && name.trim() !== '') {
+    if (!!name && name.trim() !== '') {
+      console.log(name);
       name = name.trim();
-      this.ref.push({'name': name}).then((newRef) => {
-        this.itemKey = newRef.key();
-        this.item = this.items.get(this.itemKey);
-      })
-      .catch(function(err){
-         console.info('Add node failed', err.code, err);
-      });
+      this.editItem = new Item(name);
+      let ref = wilddog.sync().ref('groups').child(this.key).child('items');
+      ref.push(this.editItem).then((newRef) => {
+        this.snackbar.open(`成功添加`, null, {duration: 2000});
+        this.currentKey = newRef.key();
+      }).catch((err) => this.snackbar.open(`错误: ${err}`, null, {duration: 2000}));
     }
   }
 
-  editItem(key: string) {
-    this.itemKey = key;
-    if (this.itemKey) {
-      this.item = this.items.get(this.itemKey);
-    }
-  }
-
-  submit() {
-    if (!this.item.name) return;
-    this.ref.child(this.itemKey).update({
-      'name' : this.item.name,
-      'price': this.item.price || 0,
-      'img': this.item.img || '',
-      'stock': this.item.stock || 0
-    })
-  }
-
-  close() {
-    this.item = null;
-    this.itemKey = null;
+  itemAdded() {
+    this.editItem = null;
   }
 }

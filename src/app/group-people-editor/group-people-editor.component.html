@@ -4,7 +4,7 @@
     <input mdInput [(ngModel)]="peopleName" placeholder="昵称"/>
   </md-input-container>
   <app-user-picker [(value)]="peopleKey"
-                   (displayName)="peopleName">
+                   (displayNameChange)="peopleName = $event">
   </app-user-picker>
   <button md-raised-button (click)="addPeople()"
           color="primary">参团</button>
@@ -12,10 +12,11 @@
 
 <button md-raised-button
         (click)="addMe()"
-        *ngIf="!isOwner"
-        color="primary">参团</button>
-
+        *ngIf="!isOwner && !people"
+        color="primary"
+        [disabled]="!isOpen">参团</button>
 <app-group-people-item-editor
+    *ngIf="people"
     [people]="people"
     [peopleKey]="peopleKey"
     [itemKeys]="itemKeys"
@@ -23,10 +24,14 @@
     [isOpen]="isOpen"
     [isOwner]="isOwner"
     [groupKey]="key"
-    [isEditMode]="isEditMode">
+    (cancelChange)="close()"
+    (submitChange)="close()"
+    (deleteChange)="onDelete($event)"
+    [isEditMode]="true">
 </app-group-people-item-editor>
 
 <div *ngIf="isOwner">
+  <h3>成员列表</h3>
   <md-list>
     <md-list-item>
       <div md-line>
@@ -40,15 +45,15 @@
       <a md-icon-button disabled><md-icon>edit</md-icon></a>
       <a md-icon-button disabled><md-icon>delete</md-icon></a>
     </md-list-item>
-    <app-group-people-item-editor *ngFor="let key of peopleKeys"
-        [people]="peoples.get(key)"
-        [peopleKey]="key"
+    <app-group-people-item-editor *ngFor="let pkey of peopleKeys"
+        [people]="peoples.get(pkey)"
+        [peopleKey]="pkey"
         [itemKeys]="itemKeys"
         [items]="items"
         [isOpen]="isOpen"
         [isOwner]="isOwner"
         [groupKey]="key"
-        [isEditMode]="isEditMode"
+        [isEditMode]="peopleKey == pkey"
         [isTableView]="true">
     </app-group-people-item-editor>
   </md-list>

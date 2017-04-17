@@ -22,6 +22,7 @@ import { UserPickerComponent } from './user-picker/user-picker.component';
 import { GroupListComponent } from './group-list/group-list.component';
 import { GoodsIndexComponent } from './goods-index/goods-index.component';
 import { GroupPeopleItemEditorComponent } from './group-people-item-editor/group-people-item-editor.component';
+import { GroupSingleItemEditorComponent } from './group-single-item-editor/group-single-item-editor.component';
 
 var config = {
   syncURL: "https://aptx4869.wilddogio.com",
@@ -55,7 +56,8 @@ const appRoutes: Routes = [
     UserPickerComponent,
     GroupListComponent,
     GoodsIndexComponent,
-    GroupPeopleItemEditorComponent
+    GroupPeopleItemEditorComponent,
+    GroupSingleItemEditorComponent
   ],
   imports: [
     BrowserModule,

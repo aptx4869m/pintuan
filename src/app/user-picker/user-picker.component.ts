@@ -34,6 +34,7 @@ export class UserPickerComponent implements OnInit {
     this.valueChange.emit(this._selected);
     this.users.forEach((user) => {
       if (user.key == this._selected) {
+        console.log(user.displayName);
         this.displayNameChange.emit(user.displayName);
       }
     });

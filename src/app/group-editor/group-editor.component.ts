@@ -17,7 +17,7 @@ export class GroupEditorComponent implements OnInit {
   savedCollection: Collection;
   currentPeople: People;
   key: string;
-  ref = wilddog.sync().ref();
+  ref: any;
 
   localItems: Item[] = [];
   localPeoples: People[] = [];
@@ -25,69 +25,10 @@ export class GroupEditorComponent implements OnInit {
   constructor(private _route: ActivatedRoute) {
     _route.params.subscribe(p => {
       this.key = p['id'];
-
-      this.ref.child(this.key).on('value', (snapshot) => {
-        if (snapshot.val()) {
-          this.collection = new Collection(snapshot.val());
-          this._calculateItems();
-          this._calculatePeoples();
-        }
-      });
     });
   }
 
-  deleteItem(name: string) {
-    this.collection.items.set(name, null);
-    this.collection.peoples.forEach((p) => {
-      p.buy.set(name, null)
-    });
-    this._calculateItems();
-  }
-
-  addItem(name: string) {
-    // check name
-    if (name && name.trim() !== '') {
-      name = name.trim();
-      if (!this.collection.items.get(name)) {
-        this.collection.items.set(name, new Item(name));
-      }
-    }
-    this._calculateItems();
-  }
-
-  addPeople(name: string) {
-    if (name && name.trim() !== '') {
-      let match = this.collection.peoples.get(name);
-      if (!match) {
-        match = new People(name);
-        this.collection.peoples.set(name, match);
-      }
-      if (!this.isOwner) {
-        this.currentPeople = match;
-      }
-    }
-    this._calculatePeoples();
-  }
-
-  deletePeople(name: string) {
-    this.collection.peoples.set(name, null);
-    if (this.currentPeople.name === name) {
-      this.currentPeople = null;
-    }
-    this._calculatePeoples();
-  }
-
-  submit() {
-    this.calculate();
-    if (this.isOwner) {
-      this.ref.child(this.key).update(this.collection);
-    } else if (this.currentPeople) {
-      this.ref.child(this.key).child('peoples').child(this.currentPeople.name).update(this.currentPeople);
-    }
-
-  }
-
-  calculate() {
+  /*calculate() {
     this.collection.peoples.forEach((people, name) => {
       people.total = 0;
     });
@@ -103,35 +44,7 @@ export class GroupEditorComponent implements OnInit {
         }
       });
     })
-  }
-
-  _calculateLocalItems() {
-    this.localItems.forEach((item) => {
-      this.collection.items.set(item.name, item);
-    });
-  }
-
-  _calculateLocalPeoples() {
-
-    this.localPeoples.forEach((people) => {
-      this.collection.peoples.set(people.name, people);
-    });
-  }
-
-  _calculateItems() {
-    let items = [];
-    this.collection.items.forEach((item, name) => {
-      items.push(item);
-    });
-    this.localItems = items;
-  }
-
-  _calculatePeoples() {
-    this.localPeoples = [];
-    this.collection.peoples.forEach((people, name) => {
-      this.localPeoples.push(people);
-    });
-  }
+  }*/
 
   ngOnInit() {
   }

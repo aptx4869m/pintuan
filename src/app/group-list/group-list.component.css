@@ -13,7 +13,7 @@
 }
 
 .create-group {
-  position: absolute;
+  position: fixed;
   z-index: 1000;
   right: 20px;
   bottom: 20px;

@@ -32,7 +32,7 @@ export class AdminManagerComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    wilddog.sync().ref('admin').child(name).off();
+    wilddog.sync().ref('admin').child(this.key).off();
   }
 
   updateAdmin(key: string, value: boolean) {
@@ -40,6 +40,11 @@ export class AdminManagerComponent implements OnInit {
       .set(value === true ? true : null)
       .then((_) => this.snackbar.open('更新成功', null, {duration: 2000}))
       .catch((err) => this.snackbar.open(`错误: ${err}`, null, {duration: 2000}));
+  }
+
+  get authText() {
+    return this.users  ?
+      this.users.map((user) => `auth.uid == '${user}'`).join(' || ') : '';
   }
 
   addPeople() {

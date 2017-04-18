@@ -38,4 +38,10 @@ export class GroupInfoEditorComponent implements OnDestroy {
       this.ref.update(this.collection);
     }
   }
+
+  delete() {
+    if (this.isOwner && this.ref) {
+      this.ref.remove();
+    }
+  }
 }

@@ -5,9 +5,15 @@
   {{ currentUser.displayName }}
   <span *ngIf="!currentUser.displayName">({{currentUser.email}}) </span>
   <button md-icon-button routerLink="/profile"><md-icon >account_box</md-icon></button>
-  <button md-button routerLink="/bought" *ngIf="isAdmin">Mer/Ota</button>
-  <button md-button routerLink="/groups">拼团</button>
-  <button md-button routerLink="/index">图鉴</button>
+  <md-menu #appMenu="mdMenu">
+    <button md-menu-item routerLink="/bought" *ngIf="isAdmin"> Mer/Ota </button>
+    <button md-menu-item routerLink="/groups"> 拼团 </button>
+    <button md-menu-item routerLink="/index"> 图鉴 </button>
+  </md-menu>
+
+  <button md-icon-button [mdMenuTriggerFor]="appMenu">
+     菜单
+  </button>
   <span class="nav-spacer"></span>
   <button md-button (click)="signOut()">
     退出

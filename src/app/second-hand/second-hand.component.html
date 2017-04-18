@@ -61,27 +61,30 @@
     </a>
   </md-card-title>
   <md-input-container>
-    <input mdInput [(ngModel)]="currentItem.name" placeholder="物品名称" (blur)="submit()" required/>
+    <input mdInput [(ngModel)]="currentItem.name" placeholder="物品名称" required/>
   </md-input-container>
   <br>
   <md-input-container>
-    <input mdInput [(ngModel)]="currentItem.user" placeholder="用户昵称" (blur)="submit()" required/>
+    <input mdInput [(ngModel)]="currentItem.user" placeholder="用户昵称" required/>
   </md-input-container>
   <app-user-picker [(value)]="currentItem.uid"></app-user-picker>
   <br>
   <md-input-container>
-    <input mdInput [(ngModel)]="currentItem.link" placeholder="链接" (blur)="submit()" required/>
+    <input mdInput [(ngModel)]="currentItem.link" placeholder="链接" required/>
   </md-input-container>
   <br>
   <md-input-container>
-    <input mdInput [(ngModel)]="currentItem.price" placeholder="价格" (blur)="submit()" type="number" required/>
+    <input mdInput [(ngModel)]="currentItem.price" placeholder="价格" type="number" required/>
   </md-input-container>
   <br>
-  <md-button-toggle-group name="deliveries" [(ngModel)]="currentItem.delivered"  (blur)="submit()">
+  <md-button-toggle-group name="deliveries" [(ngModel)]="currentItem.delivered">
      <md-button-toggle *ngFor="let delivery of deliveries" [value]="delivery.code">{{ delivery.name }}</md-button-toggle>
   </md-button-toggle-group>
   <br>
-  <md-button-toggle-group name="pays" [(ngModel)]="currentItem.paid"  (blur)="submit()">
+  <md-button-toggle-group name="pays" [(ngModel)]="currentItem.paid">
      <md-button-toggle *ngFor="let pay of pays" [value]="pay.code">{{ pay.name }}</md-button-toggle>
   </md-button-toggle-group>
+  <md-card-actions>
+    <button md-raised-button color="primary" (click)="submit()">提交</button>
+  </md-card-actions>
 </md-card>

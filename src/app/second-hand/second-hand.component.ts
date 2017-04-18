@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Router} from '@angular/router';
 import {SecondHand} from '../second-hand';
 import {AdminService} from '../admin.service';
+import {SnackbarService} from '../snackbar.service';
 
 import * as wilddog from 'wilddog';
 
@@ -39,7 +40,9 @@ export class SecondHandComponent implements OnDestroy {
     return wilddog.auth().currentUser;
   }
 
-  constructor(adminService: AdminService, router: Router) {
+  constructor(adminService: AdminService,
+              public snackbar: SnackbarService,
+              router: Router) {
     this.ref.on('value', (snapshot) => {
       this.secondHandItems.clear();
       this.keys = [];
@@ -131,13 +134,15 @@ export class SecondHandComponent implements OnDestroy {
     if (this.currentKey) {
       this.ref.child(this.currentKey).update(this.currentItem).then((newRef) => {
         this.close();
-      });
+      }).then((_) => this.snackbar.info('更新成功'))
+      .catch((err) => this.snackbar.error(err));
     } else {
       this.ref.push(this.currentItem).then((newRef) => {
         this.currentKey = newRef.key();
         this.currentItem = this.secondHandItems.get(this.currentKey);
         this.close();
-      });
+      }).then((_) => this.snackbar.info('更新成功'))
+      .catch((err) => this.snackbar.error(err));
     }
   }
 

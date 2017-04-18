@@ -1,0 +1,15 @@
+<div class="image-picker">
+  <img [src]="image" *ngIf="image" class="preview-image"/>
+</div>
+<div *ngIf="editable">
+  <md-input-container>
+    <input mdInput [(ngModel)]="image" placeholder="网络图片地址http开头" (blur)="updateImage()" required>
+  </md-input-container>
+  <div id="drop_zone"
+      (drop)="handleFileSelect($event)"
+      (dragover)="handleDragOver($event)"
+      (paste)="handleFilePaste($event)">
+    将文件拖到此处
+  </div>
+
+</div>

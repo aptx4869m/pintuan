@@ -11,8 +11,7 @@
     </md-card-content>
     <md-card-actions>
       <a md-button
-         routerLink="/group/{{group.key}}"
-         *ngIf="group.owner !== currentUser">
+         routerLink="/group/{{group.key}}">
          查看
        </a>
       <a md-button routerLink="/group-edit/{{group.key}}"

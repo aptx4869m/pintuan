@@ -1,5 +1,7 @@
 import { Component, OnDestroy, Input } from '@angular/core';
+import { Router} from '@angular/router';
 import {Collection} from '../collection';
+import { SnackbarService} from '../snackbar.service';
 import * as wilddog from 'wilddog';
 
 @Component({
@@ -13,7 +15,7 @@ export class GroupInfoEditorComponent implements OnDestroy {
   _key: string;
   @Input() isOwner: boolean = false;
 
-  constructor() {}
+  constructor(public snackbarService: SnackbarService, public router: Router) {}
 
   @Input()
   get key(): string {
@@ -35,13 +37,23 @@ export class GroupInfoEditorComponent implements OnDestroy {
 
   submit() {
     if (this.isOwner && this.ref) {
-      this.ref.update(this.collection);
+      this.ref.update(this.collection)
+        .then((_) => {
+          this.snackbarService.info('更新成功');
+        })
+        .catch((err) => this.snackbarService.error(err));
     }
   }
 
   delete() {
     if (this.isOwner && this.ref) {
-      this.ref.remove();
+      wilddog.sync().ref('groups').child(this._key).remove()
+        .then((_) => {
+          this.snackbarService.info('更新成功');
+          this.router.navigateByUrl('/groups');
+        })
+        .catch((err) => this.snackbarService.error(err));
     }
   }
+
 }

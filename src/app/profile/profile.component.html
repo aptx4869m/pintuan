@@ -8,11 +8,7 @@
       [(ngModel)]="displayName"
       placeholder="昵称" />
   </md-input-container>
-  <md-input-container>
-    <input mdInput
-      [(ngModel)]="photoURL"
-      placeholder="头像图片地址链接 http开头" />
-  </md-input-container>
+  <app-image-picker [(image)]="photoURL"></app-image-picker>
   <button md-raised-button color="primary" (click)="updateProfile()">提交</button>
 </md-card>
 </div>

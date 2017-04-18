@@ -10,6 +10,7 @@ import * as wilddog from 'wilddog';
 import {UserService} from './user.service';
 import {GoodsService} from './goods.service';
 import {AdminService} from './admin.service';
+import { SnackbarService} from './snackbar.service';
 import { AppComponent } from './app.component';
 import { GroupEditorComponent, GroupJoinComponent } from './group-editor/group-editor.component';
 import { GroupInfoEditorComponent } from './group-info-editor/group-info-editor.component';
@@ -25,6 +26,7 @@ import { GoodsIndexComponent } from './goods-index/goods-index.component';
 import { GroupPeopleItemEditorComponent } from './group-people-item-editor/group-people-item-editor.component';
 import { GroupSingleItemEditorComponent } from './group-single-item-editor/group-single-item-editor.component';
 import { AdminManagerComponent } from './admin-manager/admin-manager.component';
+import { ImagePickerComponent } from './image-picker/image-picker.component';
 
 var config = {
   syncURL: "https://aptx4869.wilddogio.com",
@@ -61,7 +63,8 @@ const appRoutes: Routes = [
     GoodsIndexComponent,
     GroupPeopleItemEditorComponent,
     GroupSingleItemEditorComponent,
-    AdminManagerComponent
+    AdminManagerComponent,
+    ImagePickerComponent
   ],
   imports: [
     BrowserModule,
@@ -71,7 +74,7 @@ const appRoutes: Routes = [
     MaterialModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [AdminService],
+  providers: [AdminService, SnackbarService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

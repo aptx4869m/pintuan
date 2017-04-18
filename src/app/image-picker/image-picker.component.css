@@ -1,0 +1,15 @@
+.image-picker {
+}
+
+.image-picker img{
+  max-width: 300px;
+  max-height: 300px;
+}
+
+#drop_zone {
+  border: 2px dashed #bbb;
+  padding: 25px;
+  text-align: center;
+  border-radius: 5px;
+  color: #bbb;
+}

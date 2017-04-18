@@ -13,13 +13,10 @@
 <md-card *ngIf="!!item && isOwner && isEditMode">
   编辑
   <md-card-header>
-    <img [src]="item.img" *ngIf="item.img" md-card-avatar />
     <md-card-title>{{item.name}}</md-card-title>
   </md-card-header>
   <md-card-content>
-    <md-input-container>
-      <input mdInput [(ngModel)]="item.img" placeholder="图片地址" />
-    </md-input-container>
+      <app-image-picker [(image)]="item.img"></app-image-picker>
     <md-input-container>
       <input mdInput [(ngModel)]="item.price" placeholder="价格" type="number"/>
     </md-input-container>

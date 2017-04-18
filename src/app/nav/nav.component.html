@@ -4,7 +4,7 @@
        *ngIf="currentUser.photoURL" class="avatar">
   {{ currentUser.displayName }}
   <span *ngIf="!currentUser.displayName">({{currentUser.email}}) </span>
-  <button md-icon-button ><md-icon >account_box</md-icon></button>
+  <button md-icon-button routerLink="/profile"><md-icon >account_box</md-icon></button>
   <button md-button routerLink="/bought" *ngIf="isAdmin">Mer/Ota</button>
   <button md-button routerLink="/groups">拼团</button>
   <button md-button routerLink="/index">图鉴</button>

@@ -20,6 +20,12 @@ export class ImagePickerComponent implements OnInit {
   ngOnInit() {
   }
 
+  handleFileInput(evt) {
+    let files = evt.target.files;
+    if (!files) return;
+    this.readFile(files[0]);
+  }
+
   handleFilePaste(evt) {
 		this._processItems(evt.clipboardData.items);
   }

@@ -2,14 +2,22 @@
   <img [src]="image" *ngIf="image" class="preview-image"/>
 </div>
 <div *ngIf="editable">
-  <md-input-container>
-    <input mdInput [(ngModel)]="image" placeholder="网络图片地址http开头" (blur)="updateImage()" required>
-  </md-input-container>
-  <div id="drop_zone"
-      (drop)="handleFileSelect($event)"
-      (dragover)="handleDragOver($event)"
-      (paste)="handleFilePaste($event)">
-    将文件拖到此处
-  </div>
-  <input type="file" (change)="handleFileInput($event)">
+  <md-tab-group>
+    <md-tab label="链接">
+      <md-input-container>
+        <input mdInput [(ngModel)]="image" placeholder="网络图片地址http开头" (blur)="updateImage()" required>
+      </md-input-container>
+    </md-tab>
+    <md-tab label="拖拽+复制">
+      <div id="drop_zone"
+          (drop)="handleFileSelect($event)"
+          (dragover)="handleDragOver($event)"
+          (paste)="handleFilePaste($event)">
+        将文件拖到此处
+      </div>
+    </md-tab>
+    <md-tab label="传统上传">
+      <input type="file" (change)="handleFileInput($event)">
+    </md-tab>
+  </md-tab-group>
 </div>

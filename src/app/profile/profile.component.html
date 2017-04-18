@@ -1,14 +1,13 @@
-<div class="main">
-  <md-card class="center">
-  <img [src]="photoURL"
-       [alt]="displayName"
-       *ngIf="photoURL" class="avatar">
+
+<md-card>
   <md-input-container>
     <input mdInput
       [(ngModel)]="displayName"
       placeholder="昵称" />
   </md-input-container>
-  <app-image-picker [(image)]="photoURL"></app-image-picker>
+  <div>
+    头像
+    <app-image-picker [(image)]="photoURL"></app-image-picker>
+  </div>
   <button md-raised-button color="primary" (click)="updateProfile()">提交</button>
 </md-card>
-</div>

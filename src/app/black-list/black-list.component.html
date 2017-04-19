@@ -1,7 +1,7 @@
 <div class="blacklist-cards">
   <md-card class="blacklist-card" *ngFor="let black of blacks">
-    <img [src]="black.img" [alt]="black.name" *ngIf="black.img" md-card-image />
     <md-card-title>
+      <img [src]="black.img" [alt]="black.name" *ngIf="black.img" md-card-avatar>
       {{black.name}}
     </md-card-title>
     <md-card-content>

@@ -34,13 +34,13 @@ export class SecondHandComponent implements OnDestroy {
   totalCount: number = 0;
   expanded: boolean = false;
 
-  isAdmin: boolean = false;
+  get isAdmin() { return this.adminService.isAdmin; }
 
   get currentUser() {
     return wilddog.auth().currentUser;
   }
 
-  constructor(adminService: AdminService,
+  constructor(public adminService: AdminService,
               public snackbar: SnackbarService,
               router: Router) {
     this.ref.on('value', (snapshot) => {
@@ -52,12 +52,6 @@ export class SecondHandComponent implements OnDestroy {
         this.keys.push(childSnapshot.key());
         this.filteredKeys = this.keys.slice();
       });
-    });
-    adminService.checkGlobal().then((value) => {
-      this.isAdmin = value;
-      if (value === true) {
-        router.navigateByUrl('./');
-      }
     });
   }
 

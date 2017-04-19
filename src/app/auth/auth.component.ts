@@ -17,8 +17,12 @@ export class AuthComponent implements OnInit {
     wilddog.auth().onAuthStateChanged((user) => {
       if (user && !wilddog.auth().currentUser.displayName) {
         router.navigateByUrl('profile');
-      } else if (user) {
+      } else if (user && this.returnUrl) {
+        console.log(this.returnUrl);
         router.navigateByUrl(this.returnUrl);
+      } else if (user) {
+        console.log(`default`);
+        router.navigateByUrl('default');
       }
     });
   }

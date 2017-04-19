@@ -1,4 +1,4 @@
-
+<div *ngIf="adminService.isAdmin">
 <md-card>
   <md-card-title>
     过滤
@@ -88,3 +88,4 @@
     <button md-raised-button color="primary" (click)="submit()">提交</button>
   </md-card-actions>
 </md-card>
+</div>

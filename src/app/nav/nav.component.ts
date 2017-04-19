@@ -15,18 +15,18 @@ export class NavComponent implements OnInit {
   displayName: string;
   photoURL: string;
   email: string;
-  isAdmin: boolean = false;
 
   get currentUser() {
     return wilddog.auth().currentUser;
   }
 
-  constructor(location: Location, router: Router, adminService: AdminService) {
+  get isAdmin() { return this.adminService.isAdmin; }
+
+  constructor(location: Location, router: Router, public adminService: AdminService) {
     wilddog.auth().onAuthStateChanged((user) => {
       if (!user) {
         router.navigate(['/login'], { queryParams: { returnUrl: location.path() }});
       }
-      adminService.checkGlobal().then((value) => this.isAdmin = value);
     });
   }
 

@@ -37,5 +37,8 @@
        [disabled]="!editBlack.name">
        {{!!editBlack.key ? '更新': '添加'}}
     </a>
+    <a md-raised-button (click)="close()">
+       关闭
+    </a>
   </md-card-actions>
 </md-card>

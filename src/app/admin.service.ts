@@ -4,15 +4,19 @@ import * as wilddog from 'wilddog';
 
 @Injectable()
 export class AdminService {
+  isAdmin: boolean = false;
 
-  constructor() { }
+  constructor() {
+    wilddog.auth().onAuthStateChanged((user) => {
+      if (user) {
+      wilddog.sync().ref('admin').child('global')
+        .child(wilddog.auth().currentUser.uid)
+        .once('value', (snapshot) => {
+          this.isAdmin = !!snapshot.val();
 
-  checkGlobal() {
-    return wilddog.sync().ref('admin').child('global')
-      .once('value', (snapshot) => {
-        return !!snapshot.val();
-
-      })
-      .catch((err) => {return false});
+        })
+        .catch((err) => { this.isAdmin = false; });
+      }
+    })
   }
 }

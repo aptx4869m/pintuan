@@ -29,6 +29,7 @@ import { AdminManagerComponent } from './admin-manager/admin-manager.component';
 import { ImagePickerComponent } from './image-picker/image-picker.component';
 import { BlackListComponent } from './black-list/black-list.component';
 import { BlackEditorComponent } from './black-editor/black-editor.component';
+import { IndexComponent } from './index/index.component';
 
 var config = {
   syncURL: "https://aptx4869.wilddogio.com",
@@ -37,7 +38,9 @@ var config = {
 wilddog.initializeApp(config);
 
 const appRoutes: Routes = [
-  { path: '*', pathMatch: 'full', component: AuthComponent },
+  { path: '*', pathMatch: 'full', component: IndexComponent },
+  { path: '', pathMatch: 'full', component: IndexComponent },
+  { path: 'default', component: IndexComponent },
   { path: 'login', component: AuthComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'groups', component: GroupListComponent },
@@ -69,7 +72,8 @@ const appRoutes: Routes = [
     AdminManagerComponent,
     ImagePickerComponent,
     BlackListComponent,
-    BlackEditorComponent
+    BlackEditorComponent,
+    IndexComponent
   ],
   imports: [
     BrowserModule,

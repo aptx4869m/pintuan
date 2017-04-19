@@ -57,16 +57,22 @@ export class BlackEditorComponent implements OnInit {
   }
 
   addBlack() {
+    let action;
     if (!this.editBlack.key) {
-      this.ref.push(this.editBlack)
-        .then((_) => this.snackbar.info('更新成功'))
-        .catch((err) => this.snackbar.error(err));
+      action = this.ref.push(this.editBlack);
     } else {
-      this.ref.child(this.editBlack.key)
-        .update(this.editBlack)
-        .then((_) => this.snackbar.info('更新成功'))
-        .catch((err) => this.snackbar.error(err));
+      action = this.ref.child(this.editBlack.key)
+        .update(this.editBlack);
     }
+    action.then((_) => {
+      this.snackbar.info('更新成功');
+      this.closeChange.emit();
+    })
+    .catch((err) => this.snackbar.error(err));
+
+  }
+
+  close() {
     this.closeChange.emit();
   }
 }

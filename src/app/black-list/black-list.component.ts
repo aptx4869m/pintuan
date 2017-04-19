@@ -15,7 +15,8 @@ export class BlackListComponent implements OnInit {
   showCreateBlack: boolean = false;
   blacks: Black[];
   blackMap: Map<string, Black>;
-  isAdmin: boolean = false;
+
+  get isAdmin() { return this.admin.isAdmin; }
 
   constructor(public admin: AdminService, public snackbar: SnackbarService) {
     this.ref = wilddog.sync().ref('blacklists').child('list');
@@ -39,7 +40,6 @@ export class BlackListComponent implements OnInit {
         this.blackMap.set(black.key, black);
       });
     });
-    this.admin.checkGlobal().then((value) => this.isAdmin = value);
   }
 
   showMore(key: string) {
@@ -51,5 +51,10 @@ export class BlackListComponent implements OnInit {
       });
       this.blackMap.get(key).notes = notes;
     })
+  }
+
+  closeEditor() {
+    this.showCreateBlack = false;
+    this.editBlack = new Black();
   }
 }

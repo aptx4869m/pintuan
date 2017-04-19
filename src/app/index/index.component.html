@@ -1,0 +1,6 @@
+<md-grid-list cols="2" rowHeight="2:1">
+  <md-grid-tile><button md-button color="primary" routerLink="/groups"> 拼团 </button></md-grid-tile>
+  <md-grid-tile><button md-button color="primary" routerLink="/index"> 图鉴 </button></md-grid-tile>
+  <md-grid-tile><button md-button color="primary" routerLink="/blacklist"> 黑名单 </button></md-grid-tile>
+  <md-grid-tile><button md-button color="primary" routerLink="/bought" *ngIf="isAdmin"> Mer/Ota </button></md-grid-tile>
+</md-grid-list>

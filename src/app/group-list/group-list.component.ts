@@ -19,7 +19,7 @@ export class GroupListComponent implements OnInit {
   newGroupImg: string;
   showCreateGroup: boolean = false;
 
-  isAdmin: boolean = false;
+  get isAdmin() { return this.adminService.isAdmin; }
 
   get currentUser() {
     return wilddog.auth().currentUser.uid;
@@ -27,7 +27,7 @@ export class GroupListComponent implements OnInit {
 
   constructor(public router: Router,
       public snackbar: MdSnackBar,
-      adminService: AdminService) {
+      public adminService: AdminService) {
     this.ref = wilddog.sync().ref('groups');
     this.ref.on('value', (snapshot) => {
       this.groups = [];
@@ -42,7 +42,6 @@ export class GroupListComponent implements OnInit {
         }
       })
     });
-    adminService.checkGlobal().then((value) => this.isAdmin = value);
   }
 
   addGroup() {

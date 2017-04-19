@@ -1,0 +1,41 @@
+<md-card class="blacks-card" >
+  <md-card-title>
+    <md-input-container>
+      <input mdInput [(ngModel)]="editBlack.name" placeholder="名字" required>
+    </md-input-container>
+  </md-card-title>
+  <md-card-content>
+    <app-image-picker [(image)]="editBlack.img"></app-image-picker>
+    <div>
+      描述
+      <div *ngFor="let description of editBlack.descriptions; let i = index">
+        {{editBlack.descriptions[i]}}
+        <md-icon (click)="modifyDescription(i)">edit</md-icon>
+        <md-icon (click)="deleteDescription(i)">close</md-icon>
+      </div>
+      <md-input-container>
+        <textarea mdInput [(ngModel)]="editDescription" placeholder="描述"></textarea>
+      </md-input-container>
+      <button md-button (click)="addDescription()">完成描述</button>
+    </div>
+    <div>
+    标签
+    <md-chip-list>
+      <md-chip *ngFor="let tag of editBlack.tags; let i = index">
+        {{tag}}
+        <md-icon (click)="deleteTag(i)">close</md-icon>
+      </md-chip>
+    </md-chip-list>
+    <md-input-container>
+      <input mdInput [(ngModel)]="editTag" placeholder="加标签">
+    </md-input-container>
+    <button md-button (click)="addTag()">加标签</button>
+  </div>
+  </md-card-content>
+  <md-card-actions>
+    <a md-raised-button (click)="addBlack()" color="primary"
+       [disabled]="!editBlack.name">
+       {{!!editBlack.key ? '更新': '添加'}}
+    </a>
+  </md-card-actions>
+</md-card>

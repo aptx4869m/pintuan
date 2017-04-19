@@ -1,0 +1,17 @@
+.blacklist-card {
+  width: 300px;
+  margin: 16px;
+}
+
+.blacklist-cards {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+
+.create-black {
+  position: fixed;
+  z-index: 1000;
+  right: 20px;
+  bottom: 20px;
+}

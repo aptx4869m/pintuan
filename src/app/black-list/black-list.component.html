@@ -1,0 +1,34 @@
+<div class="blacklist-cards">
+  <md-card class="blacklist-card" *ngFor="let black of blacks">
+    <img [src]="black.img" [alt]="black.name" *ngIf="black.img" md-card-image />
+    <md-card-title>
+      {{black.name}}
+    </md-card-title>
+    <md-card-content>
+      <md-chip-list>
+        <md-chip *ngFor="let tag of black.tags">{{tag}}</md-chip>
+      </md-chip-list>
+      <div *ngFor="let description of black.descriptions">
+        {{description}}
+      </div>
+      <div *ngFor="let note of black.notes">
+        <img [src]="note.img" [alt]="note.name" *ngIf="note.img" />
+        {{note.note}}
+      </div>
+    </md-card-content>
+    <md-card-actions>
+      <a md-button (click)="showCreateBlack = true; editBlack = black">
+        <md-icon>mode_edit</md-icon>编辑
+      </a>
+      <a md-button (click)="showMore(black.key)">更多</a>
+    </md-card-actions>
+  </md-card>
+</div>
+<a md-fab (click)="showCreateBlack = true" color="primary" class="create-black" *ngIf="isAdmin">
+  <md-icon>add</md-icon>
+</a>
+
+<app-black-editor *ngIf="showCreateBlack"
+                  [(editBlack)]="editBlack"
+                  (closeChange)="showCreateBlack = false">
+</app-black-editor>

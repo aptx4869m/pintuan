@@ -27,6 +27,8 @@ import { GroupPeopleItemEditorComponent } from './group-people-item-editor/group
 import { GroupSingleItemEditorComponent } from './group-single-item-editor/group-single-item-editor.component';
 import { AdminManagerComponent } from './admin-manager/admin-manager.component';
 import { ImagePickerComponent } from './image-picker/image-picker.component';
+import { BlackListComponent } from './black-list/black-list.component';
+import { BlackEditorComponent } from './black-editor/black-editor.component';
 
 var config = {
   syncURL: "https://aptx4869.wilddogio.com",
@@ -43,7 +45,8 @@ const appRoutes: Routes = [
   { path: 'group-edit/:id', component: GroupEditorComponent },
   { path: 'group/:id', component: GroupJoinComponent },
   { path: 'bought', component: SecondHandComponent },
-  { path: 'admin/:id', component: AdminManagerComponent}
+  { path: 'admin/:id', component: AdminManagerComponent},
+  { path: 'blacklist', component: BlackListComponent}
 ];
 
 @NgModule({
@@ -64,7 +67,9 @@ const appRoutes: Routes = [
     GroupPeopleItemEditorComponent,
     GroupSingleItemEditorComponent,
     AdminManagerComponent,
-    ImagePickerComponent
+    ImagePickerComponent,
+    BlackListComponent,
+    BlackEditorComponent
   ],
   imports: [
     BrowserModule,

@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {Goods} from '../goods';
 import * as wilddog from 'wilddog';
 
+import {AdminService} from '../admin.service';
+import {SnackbarService} from '../snackbar.service';
+
 @Component({
   selector: 'app-goods-index',
   templateUrl: './goods-index.component.html',
@@ -15,11 +18,13 @@ export class GoodsIndexComponent implements OnInit {
   showCreateGood: boolean = false;
   editGoods: Goods = new Goods();
 
+  get isAdmin() { return this.adminService.isAdmin; }
   get currentUser() {
     return wilddog.auth().currentUser ?
       wilddog.auth().currentUser.uid : null;
   }
-  constructor() { }
+  constructor(public adminService: AdminService,
+              public snackbar: SnackbarService) { }
 
   ngOnInit() {
     wilddog.sync().ref('goods').on('value', (snapshot) => {
@@ -66,6 +71,14 @@ export class GoodsIndexComponent implements OnInit {
     let ref = wilddog.sync().ref('user-goods')
       .child(this.currentUser).child('want').child(key);
     value ? ref.set(value) : ref.remove();
+  }
+
+  deleteGoods(key: string) {
+    if (this.adminService.isAdmin) {
+      wilddog.sync().ref('goods').child(key).remove()
+        .then((_) => this.snackbar.info('更新成功'))
+        .catch((err) => this.snackbar.error(err));
+    }
   }
 
   addGood() {

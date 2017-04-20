@@ -22,6 +22,9 @@
       <a md-button (click)="showCreateGood = true; editGoods = good">
         <md-icon>mode_edit</md-icon>编辑
       </a>
+      <a md-button (click)="deleteGoods(good.key)" *ngIf="isAdmin">
+        删除
+      </a>
     </md-card-actions>
   </md-card>
 </div>

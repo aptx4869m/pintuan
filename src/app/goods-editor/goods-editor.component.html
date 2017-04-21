@@ -1,4 +1,4 @@
-<md-card class="goods-card" *ngIf="isEditMode && goods">
+<md-card class="goods-card" *ngIf="isEditMode && !!goods">
   <img [src]="goods.img" *ngIf="goods.img" md-card-image/>
   <md-card-title>
     <md-input-container>

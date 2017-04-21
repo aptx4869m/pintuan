@@ -1,4 +1,4 @@
-<md-card class="blacks-card" *ngIf="isEditMode && black">
+<md-card class="blacks-card" *ngIf="isEditMode && !!black">
   <md-card-title>
     <md-input-container>
       <input mdInput [(ngModel)]="black.name" placeholder="名字" required>
@@ -32,7 +32,7 @@
   <md-card-actions>
     <a md-raised-button (click)="addBlack()" color="primary"
        [disabled]="!black.name">
-       {{!!black.key ? '更新': '添加'}}
+       {{!!blackKey ? '更新': '添加'}}
     </a>
     <a md-raised-button (click)="close()">
        关闭

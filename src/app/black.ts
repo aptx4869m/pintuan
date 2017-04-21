@@ -10,5 +10,5 @@ export class Black {
 export class BlackNote {
   note: string;
   img: string;
-  contributor: string;
+  owner: string;
 }

@@ -1,17 +1,18 @@
+
 <div class="goods-cards">
-  <app-goods-editor *ngFor="let good of goods"
-                    [goods]="good"
-                    [showMore]="currentShowMore == good.key"
-                    [want]="want(good.key)"
-                    [has]="has(good.key)"
-                    (showMoreChange)="setShowMore(good.key, $event)">
+  <app-goods-editor #editor *ngIf="showCreateGood"
+                    [isEditMode]="true"
+                    (submitChange)="showCreateGood = false">
+  </app-goods-editor>
+
+  <app-goods-editor *ngFor="let goodsKey of goodsKeys"
+                    [showMore]="currentShowMore == goodsKey"
+                    [want]="want(goodsKey)"
+                    [has]="has(goodsKey)"
+                    [goodsKey]="goodsKey"
+                    (showMoreChange)="setShowMore(goodsKey, $event)">
   </app-goods-editor>
 </div>
-<a md-fab (click)="showCreateGood = true" color="primary" class="create-good">
+<a md-fab (click)="addClicked()" color="primary" class="create-good">
   <md-icon>add</md-icon>
 </a>
-
-<app-goods-editor *ngIf="showCreateGood"
-                  [goods]="editGoods"
-                  (submitChange)="showCreateGood = false">
-</app-goods-editor>

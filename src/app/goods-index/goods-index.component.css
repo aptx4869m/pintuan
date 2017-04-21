@@ -1,5 +1,5 @@
 .goods-card {
-  width: 180px;
+  width: 250px;
   margin: 16px;
 }
 
@@ -27,3 +27,6 @@
 .want-good {
   color: red;
 }
+
+.grid-item { width: 200px; }
+.grid-item--width2 { width: 400px; }

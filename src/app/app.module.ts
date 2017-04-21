@@ -31,6 +31,7 @@ import { BlackListComponent } from './black-list/black-list.component';
 import { BlackEditorComponent } from './black-editor/black-editor.component';
 import { IndexComponent } from './index/index.component';
 import { GoodsEditorComponent } from './goods-editor/goods-editor.component';
+import { BlackNoteEditorComponent } from './black-note-editor/black-note-editor.component';
 
 var config = {
   syncURL: "https://aptx4869.wilddogio.com",
@@ -75,7 +76,8 @@ const appRoutes: Routes = [
     BlackListComponent,
     BlackEditorComponent,
     IndexComponent,
-    GoodsEditorComponent
+    GoodsEditorComponent,
+    BlackNoteEditorComponent
   ],
   imports: [
     BrowserModule,

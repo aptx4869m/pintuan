@@ -9,4 +9,5 @@ export class Goods {
   endsDate: string;
   link: string;
   purchaseLink: string[];
+  lastModified: number;
 }

@@ -1,0 +1,17 @@
+<div *ngFor="let note of notes; let i = index">
+  <div *ngIf="isNoteEditMode(note)">
+    <app-image-picker [(image)]="note.img"></app-image-picker>
+    <md-input-container>
+      <textarea mdInput [(ngModel)]="note.note"></textarea>
+    </md-input-container>
+    <button md-button (click)="removeBlackNote(i)">
+      删除
+    </button>
+    <button md-button (click)="save()">保存</button>
+  </div>
+  <div *ngIf="!isNoteEditMode(note)">
+    <img [src]="note.img" [alt]="note.name" *ngIf="note.img" />
+    {{note.note}}
+  </div>
+</div>
+<button *ngIf="isEditMode" md-button (click)="addBlackNote()">添加</button>

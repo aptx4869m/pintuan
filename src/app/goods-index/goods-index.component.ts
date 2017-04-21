@@ -11,12 +11,11 @@ import {SnackbarService} from '../snackbar.service';
   styleUrls: ['./goods-index.component.css']
 })
 export class GoodsIndexComponent implements OnInit {
-  goods: Goods[] = [];
+  goodsKeys: string[] = [];
   wantList: string[] = [];
   hasList: string[] = [];
 
   showCreateGood: boolean = false;
-  editGoods: Goods = new Goods();
   currentShowMore: string;
 
   get isAdmin() { return this.adminService.isAdmin; }
@@ -28,13 +27,11 @@ export class GoodsIndexComponent implements OnInit {
               public snackbar: SnackbarService) { }
 
   ngOnInit() {
-    wilddog.sync().ref('goods').orderByChild('lastModified').limitToLast(150).on('value', (snapshot) => {
-      this.goods = [];
-
+    wilddog.sync().ref('goods-list').orderByValue().once('value', (snapshot) => {
+      this.goodsKeys = [];
       snapshot.forEach((childSnapshot) => {
-        let good = childSnapshot.val();
-        good.key = childSnapshot.key();
-        this.goods.push(good);
+        let goodsKey = childSnapshot.key();
+        this.goodsKeys.push(goodsKey);
       });
     });
     wilddog.auth().onAuthStateChanged((user) => {
@@ -61,16 +58,9 @@ export class GoodsIndexComponent implements OnInit {
     });
   }
 
-  addGood() {
-    this.showCreateGood = false;
-
-    if (!this.editGoods.key) {
-      wilddog.sync().ref('goods').push(this.editGoods);
-    } else {
-      wilddog.sync().ref('goods').child(this.editGoods.key)
-        .update(this.editGoods);
-    }
-    this.editGoods = new Goods();
+  addClicked() {
+    this.showCreateGood = true;
+    window.scrollTo(0, 0)
   }
 
   has(key: string) {

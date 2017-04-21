@@ -11,10 +11,18 @@ import {SnackbarService} from '../snackbar.service';
 })
 export class GoodsEditorComponent implements OnInit {
   @Input() isEditMode: boolean = false;
-  @Input() goods: Goods;
   @Input() want: boolean;
   @Input() has: boolean;
   @Input() showMore: boolean;
+  _goodsKey: string;
+  goods: Goods = new Goods();
+
+  @Input()
+  get goodsKey(): string { return this._goodsKey; }
+  set goodsKey(key: string) {
+    this._goodsKey = key;
+    this._fetchGoods();
+  }
 
   @Output() submitChange: EventEmitter<void> = new EventEmitter<void>();
   @Output() showMoreChange: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -30,10 +38,20 @@ export class GoodsEditorComponent implements OnInit {
   ngOnInit() {
   }
 
+  _fetchGoods() {
+    if (!this.goodsKey) {
+      this.goods = new Goods();
+      return;
+    }
+    wilddog.sync().ref('goods').child(this.goodsKey).once('value', (snapshot) => {
+      this.goods = snapshot.val() as Goods;
+    });
+  }
+
   markHas() {
     let value = !this.has;
     let ref = wilddog.sync().ref('user-goods')
-      .child(this.currentUser).child('has').child(this.goods.key);
+      .child(this.currentUser).child('has').child(this.goodsKey);
     let action = value ? ref.set(value) : ref.remove();
     action.then((_) => {
       this.snackbar.info('更新成功');
@@ -44,7 +62,7 @@ export class GoodsEditorComponent implements OnInit {
   markWant() {
     let value = !this.want;
     let ref = wilddog.sync().ref('user-goods')
-      .child(this.currentUser).child('want').child(this.goods.key);
+      .child(this.currentUser).child('want').child(this.goodsKey);
     let action = value ? ref.set(value) : ref.remove();
     action.then((_) => {
       this.snackbar.info('更新成功');
@@ -53,13 +71,20 @@ export class GoodsEditorComponent implements OnInit {
   }
 
   deleteGoods() {
-    if (this.adminService.isAdmin && this.goods.key) {
-      let action = wilddog.sync().ref('goods').child(this.goods.key).remove();
+    if (this.adminService.isAdmin && this.goodsKey) {
+      let action = wilddog.sync().ref('goods-list').child(this.goodsKey).remove();
       action.then((_) => {
         this.snackbar.info('更新成功');
       })
       .catch((err) => this.snackbar.error(err));
+    }
+  }
 
+  close(){
+    this.isEditMode = false;
+    this._fetchGoods();
+    if (!this.goodsKey) {
+      this.submitChange.emit();
     }
   }
 
@@ -67,10 +92,15 @@ export class GoodsEditorComponent implements OnInit {
     this.isEditMode = false;
 
     let action;
-    if (!this.goods.key) {
-      action = wilddog.sync().ref('goods').push(this.goods);
+
+    if (!this.goodsKey) {
+      this.goods.lastModified = wilddog.sync().ServerValue.TIMESTAMP;
+      action = wilddog.sync().ref('goods').push(this.goods).then((newRef) => {
+        this.goodsKey = newRef.key();
+        wilddog.sync().ref('goods-list').child(this.goodsKey).set(true);
+      });
     } else {
-      action = wilddog.sync().ref('goods').child(this.goods.key)
+      action = wilddog.sync().ref('goods').child(this.goodsKey)
         .update(this.goods);
     }
     action.then((_) => {
@@ -94,7 +124,7 @@ export class GoodsEditorComponent implements OnInit {
   }
 
   setImage(image: string) {
-    wilddog.sync().ref('goods').child(this.goods.key)
+    wilddog.sync().ref('goods').child(this.goodsKey)
       .child('img').set(image).then((_) => {
         this.snackbar.info('更新成功');
         this.toggleShowMore();

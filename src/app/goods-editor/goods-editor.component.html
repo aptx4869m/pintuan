@@ -1,4 +1,4 @@
-<md-card class="goods-card" *ngIf="isEditMode">
+<md-card class="goods-card" *ngIf="isEditMode && goods">
   <img [src]="goods.img" *ngIf="goods.img" md-card-image/>
   <md-card-title>
     <md-input-container>
@@ -60,35 +60,38 @@
   <md-card-actions>
     <a md-raised-button (click)="addGood()" color="primary"
        [disabled]="!(!!goods.name && !!goods.img)">
-       {{!!goods.key ? '更新': '添加'}}
+       {{!!goodsKey ? '更新': '添加'}}
+    </a>
+    <a md-raised-button (click)="close()">
+       取消
     </a>
   </md-card-actions>
 </md-card>
 
-<md-card class="goods-card" *ngIf="!isEditMode && goods.key">
+<md-card class="goods-card" *ngIf="!isEditMode && goodsKey">
   <img [src]="goods.img" [alt]="goods.name" *ngIf="goods.img" md-card-image />
   <md-card-title>
     {{goods.name}}
   </md-card-title>
   <md-card-content>
-    {{goods.description}}
-    <div *ngIf="goods.date">
-      日期: {{goods.date}}
-    </div>
-    <div *ngIf="goods.brand">
-      厂商: {{goods.brand}}
-    </div>
-    <div *ngIf="goods.price">
-      价格: {{goods.price}}
-    </div>
-    <div *ngIf="goods.specification">
-      规格: {{goods.specification}}
-    </div>
-    <div *ngIf="goods.url">
-      网址: <a [href]="goods.url" target="_blank">{{goods.url}}</a>
-    </div>
     <button md-button (click)="toggleShowMore()">更多</button>
     <div *ngIf="showMore">
+      {{goods.description}}
+      <div *ngIf="goods.date">
+        日期: {{goods.date}}
+      </div>
+      <div *ngIf="goods.brand">
+        厂商: {{goods.brand}}
+      </div>
+      <div *ngIf="goods.price">
+        价格: {{goods.price}}
+      </div>
+      <div *ngIf="goods.specification">
+        规格: {{goods.specification}}
+      </div>
+      <div *ngIf="goods.url">
+        网址: <a [href]="goods.url" target="_blank">{{goods.url}}</a>
+      </div>
       <div *ngFor="let image of goods.images">
         <app-image-picker [image]="image"
                           [editable]="false">
@@ -112,7 +115,7 @@
     <a md-button (click)="isEditMode = true">
       <md-icon>mode_edit</md-icon>编辑
     </a>
-    <a md-button (click)="deleteGoods(goods.key)" *ngIf="isAdmin">
+    <a md-button (click)="deleteGoods(goodsKey)" *ngIf="isAdmin">
       删除
     </a>
   </md-card-actions>

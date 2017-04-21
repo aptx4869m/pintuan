@@ -11,10 +11,8 @@ import * as wilddog from 'wilddog';
 })
 export class BlackListComponent implements OnInit {
   ref: any;
-  editBlack: Black = new Black();
   showCreateBlack: boolean = false;
-  blacks: Black[];
-  blackMap: Map<string, Black>;
+  blackKeys: string[];
 
   get isAdmin() { return this.admin.isAdmin; }
 
@@ -29,32 +27,20 @@ export class BlackListComponent implements OnInit {
 
   ngOnInit() {
     this.ref.on('value', (snapshot) => {
-      this.blackMap = new Map<string, Black>();
-      this.blacks = [];
+
+      this.blackKeys = [];
       snapshot.forEach((childSnapshot) => {
-        let black = childSnapshot.val();
-        black.key = childSnapshot.key();
-        if (!black.tags) black.tags = [];
-        if (!black.descriptions) black.descriptions = [];
-        this.blacks.push(black);
-        this.blackMap.set(black.key, black);
+        this.blackKeys.push(childSnapshot.key());
       });
     });
   }
 
-  showMore(key: string) {
-    wilddog.sync().ref('blacklists').child('details').child(key).once('value', (snapshot) => {
-      let notes: BlackNote[] = [];
-      snapshot.forEach((childSnapshot) => {
-        let note = childSnapshot.val() as BlackNote;
-        notes.push(note);
-      });
-      this.blackMap.get(key).notes = notes;
-    })
-  }
-
   closeEditor() {
     this.showCreateBlack = false;
-    this.editBlack = new Black();
+  }
+
+  addClicked() {
+    this.showCreateBlack = true;
+    window.scrollTo(0, 0);
   }
 }

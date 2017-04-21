@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import {Black} from '../black';
+import {Black, BlackNote} from '../black';
 import {SnackbarService} from '../snackbar.service';
 import * as wilddog from 'wilddog';
 
@@ -10,69 +10,94 @@ import * as wilddog from 'wilddog';
 })
 export class BlackEditorComponent implements OnInit {
   ref: any;
-  @Input() editBlack: Black;
+  black: Black = new Black();
+  _blackKey: string;
+
   @Output() closeChange: EventEmitter<void> = new EventEmitter<void>();
-
-  editTag: string = '';
-  editDescription: string = '';
-  indexDescription = -1;
-
-  constructor(private snackbar: SnackbarService) {
-    this.ref = wilddog.sync().ref('blacklists').child('list');
+  @Input()
+  get blackKey() { return this._blackKey; }
+  set blackKey(key: string) {
+    this._blackKey = key;
+    this._fetchBlack();
   }
+
+  moreVisible: boolean = false;
+
+  blackDescriptions: string = '';
+
+  @Input() isEditMode: boolean = false;
+  editTag: string = '';
+
+  constructor(private snackbar: SnackbarService) {}
 
   ngOnInit() {
   }
 
-  modifyDescription(i: number) {
-    this.indexDescription = i;
-    this.editDescription = this.editBlack.descriptions[i];
-  }
-
-  deleteDescription(i: number) {
-    this.indexDescription = -1;
-    this.editBlack.descriptions.splice(i, 1);
-  }
-
-  addDescription() {
-    if (this.indexDescription == -1) {
-      this.editBlack.descriptions.push(this.editDescription);
-    } else {
-      this.editBlack.descriptions[this.indexDescription] = this.editDescription;
-      this.indexDescription = -1;
-    }
-    this.editDescription = '';
+  get currentUser() {
+    return wilddog.auth().currentUser ?
+      wilddog.auth().currentUser.uid : null;
   }
 
   deleteTag(i: number) {
-    this.editBlack.tags.splice(i, 1);
+    this.black.tags.splice(i, 1);
   }
 
   addTag() {
     this.editTag = this.editTag.trim();
     if (!this.editTag) { return; }
-    if (this.editBlack.tags.includes(this.editTag)) { return; }
-    this.editBlack.tags.push(this.editTag);
+    if (this.black.tags.includes(this.editTag)) { return; }
+    this.black.tags.push(this.editTag);
     this.editTag = '';
   }
 
+
   addBlack() {
     let action;
-    if (!this.editBlack.key) {
-      action = this.ref.push(this.editBlack);
+    this.black.descriptions = this.blackDescriptions.split('\n');
+    console.log(this.black.descriptions);
+    console.log(this.black);
+    if (!this.blackKey) {
+      action = wilddog.sync().ref('blacklists').child('list').push(this.black);
     } else {
-      action = this.ref.child(this.editBlack.key)
-        .update(this.editBlack);
+      action = wilddog.sync().ref('blacklists').child('list').child(this.blackKey)
+        .update(this.black);
     }
     action.then((_) => {
       this.snackbar.info('更新成功');
-      this.closeChange.emit();
+      this.close();
     })
     .catch((err) => this.snackbar.error(err));
-
   }
 
   close() {
+    this.isEditMode = false;
+    this._fetchBlack();
     this.closeChange.emit();
+  }
+
+  showMore() {
+    this.moreVisible = !this.moreVisible;
+  }
+
+  _fetchBlack() {
+    if (!this.blackKey) {
+      this.black = new Black();
+      this.blackDescriptions = '';
+      this.isEditMode = true;
+      return;
+    }
+    if (this.ref) {
+      this.ref.off();
+    }
+    this.ref = wilddog.sync().ref('blacklists').child('list').child(this.blackKey);
+    this.ref.on('value', (snapshot) => {
+      this.black = snapshot.val() as Black;
+      if (this.black.descriptions) {
+        this.blackDescriptions = this.black.descriptions.join('\n');
+      } else {
+        this.blackDescriptions = '';
+      }
+
+    });
   }
 }

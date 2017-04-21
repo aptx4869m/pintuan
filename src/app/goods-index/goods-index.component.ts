@@ -18,6 +18,11 @@ export class GoodsIndexComponent implements OnInit {
   showCreateGood: boolean = false;
   currentShowMore: string;
 
+  pageSize: number = 40;
+  lastValue: number;
+  firstValue: number;
+  ref: any;
+
   get isAdmin() { return this.adminService.isAdmin; }
   get currentUser() {
     return wilddog.auth().currentUser ?
@@ -27,18 +32,48 @@ export class GoodsIndexComponent implements OnInit {
               public snackbar: SnackbarService) { }
 
   ngOnInit() {
-    wilddog.sync().ref('goods-list').orderByValue().once('value', (snapshot) => {
-      this.goodsKeys = [];
-      snapshot.forEach((childSnapshot) => {
-        let goodsKey = childSnapshot.key();
-        this.goodsKeys.push(goodsKey);
-      });
+    this.ref = wilddog.sync().ref('goods-list').orderByValue().limitToFirst(this.pageSize);
+    this.ref.on('value', (snapshot) => {
+      this._addGoods(snapshot);
     });
     wilddog.auth().onAuthStateChanged((user) => {
       if (user) {
         this._fetchGoods();
       }
     })
+  }
+
+  nextPage() {
+    this.ref.off();
+    this.ref = wilddog.sync().ref('goods-list').orderByValue()
+      .startAt(this.lastValue).limitToFirst(this.pageSize);
+    this.ref.on('value', (snapshot) => {
+        this._addGoods(snapshot);
+    });
+  }
+
+  prevPage() {
+    this.ref.off();
+    this.ref = wilddog.sync().ref('goods-list').orderByValue()
+      .endAt(this.firstValue).limitToLast(this.pageSize);
+    this.ref.on('value', (snapshot) => {
+        this._addGoods(snapshot);
+    });
+  }
+
+  _addGoods(snapshot: any) {
+    this.goodsKeys = [];
+    snapshot.forEach((childSnapshot) => {
+      let goodsKey = childSnapshot.key();
+      this.goodsKeys.push(goodsKey);
+
+      if (this.goodsKeys.length == 1) {
+        this.firstValue = childSnapshot.val();
+      }
+      if (this.goodsKeys.length === snapshot.numChildren()) {
+        this.lastValue = childSnapshot.val();
+      }
+    });
   }
 
   _fetchGoods() {

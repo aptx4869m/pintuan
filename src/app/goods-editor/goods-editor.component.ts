@@ -43,7 +43,7 @@ export class GoodsEditorComponent implements OnInit {
       this.goods = new Goods();
       return;
     }
-    wilddog.sync().ref('goods').child(this.goodsKey).once('value', (snapshot) => {
+    wilddog.sync().ref('goods').child(this.goodsKey).on('value', (snapshot) => {
       this.goods = snapshot.val() as Goods;
     });
   }

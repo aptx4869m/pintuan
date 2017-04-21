@@ -54,8 +54,6 @@ export class BlackEditorComponent implements OnInit {
   addBlack() {
     let action;
     this.black.descriptions = this.blackDescriptions.split('\n');
-    console.log(this.black.descriptions);
-    console.log(this.black);
     if (!this.blackKey) {
       action = wilddog.sync().ref('blacklists').child('list').push(this.black);
     } else {

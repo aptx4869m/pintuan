@@ -17,6 +17,7 @@ export class GoodsIndexComponent implements OnInit {
 
   showCreateGood: boolean = false;
   editGoods: Goods = new Goods();
+  currentShowMore: string;
 
   get isAdmin() { return this.adminService.isAdmin; }
   get currentUser() {
@@ -27,8 +28,9 @@ export class GoodsIndexComponent implements OnInit {
               public snackbar: SnackbarService) { }
 
   ngOnInit() {
-    wilddog.sync().ref('goods').on('value', (snapshot) => {
+    wilddog.sync().ref('goods').orderByChild('lastModified').limitToLast(150).on('value', (snapshot) => {
       this.goods = [];
+
       snapshot.forEach((childSnapshot) => {
         let good = childSnapshot.val();
         good.key = childSnapshot.key();
@@ -59,28 +61,6 @@ export class GoodsIndexComponent implements OnInit {
     });
   }
 
-  markHas(key: string) {
-    let value = !this.hasList.includes(key);
-    let ref = wilddog.sync().ref('user-goods')
-      .child(this.currentUser).child('has').child(key);
-    value ? ref.set(value) : ref.remove();
-  }
-
-  markWant(key: string) {
-    let value = !this.wantList.includes(key);
-    let ref = wilddog.sync().ref('user-goods')
-      .child(this.currentUser).child('want').child(key);
-    value ? ref.set(value) : ref.remove();
-  }
-
-  deleteGoods(key: string) {
-    if (this.adminService.isAdmin) {
-      wilddog.sync().ref('goods').child(key).remove()
-        .then((_) => this.snackbar.info('更新成功'))
-        .catch((err) => this.snackbar.error(err));
-    }
-  }
-
   addGood() {
     this.showCreateGood = false;
 
@@ -93,11 +73,15 @@ export class GoodsIndexComponent implements OnInit {
     this.editGoods = new Goods();
   }
 
-  hasClass(key: string) {
-    return !!key && this.hasList.includes(key) ? 'has-good' : 'no-good'
+  has(key: string) {
+    return !!key && this.hasList.includes(key);
   }
 
-  wantClass(key: string) {
-    return !!key && this.wantList.includes(key) ? 'want-good' : 'no-good'
+  want(key: string) {
+    return !!key && this.wantList.includes(key);
+  }
+
+  setShowMore(key: string, value: boolean) {
+    this.currentShowMore = value ? key : null;
   }
 }

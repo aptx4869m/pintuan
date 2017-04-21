@@ -15,5 +15,11 @@ export class SnackbarService {
     console.log(err);
     this.snackbar.open(`错误: ${err}`, null, {duration: 2000});
   }
-
+/*
+  takeAction(action: any) {
+    return action
+      .then((_) => this.info('成功更新'))
+      .catch((err) => this.error(err));
+  }
+*/
 }

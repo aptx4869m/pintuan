@@ -1,54 +1,17 @@
 <div class="goods-cards">
-  <md-card class="goods-card" *ngFor="let good of goods">
-    <img [src]="good.img" [alt]="good.name" *ngIf="good.img" md-card-image />
-    <md-card-title>
-      {{good.name}}
-    </md-card-title>
-    <md-card-content>
-      {{good.description}}
-    </md-card-content>
-    <md-card-actions>
-      <a md-button (click)="markHas(good.key)">
-        <md-icon [ngClass]="hasClass(good.key)">
-          check_circle
-        </md-icon>已有
-       </a>
-      <button md-button (click)="markWant(good.key)">
-         <md-icon [ngClass]="wantClass(good.key)">
-           {{wantList.includes(good.key) ? 'favorite' : 'favorite_border'}}
-         </md-icon>想要
-      </button>
-
-      <a md-button (click)="showCreateGood = true; editGoods = good">
-        <md-icon>mode_edit</md-icon>编辑
-      </a>
-      <a md-button (click)="deleteGoods(good.key)" *ngIf="isAdmin">
-        删除
-      </a>
-    </md-card-actions>
-  </md-card>
+  <app-goods-editor *ngFor="let good of goods"
+                    [goods]="good"
+                    [showMore]="currentShowMore == good.key"
+                    [want]="want(good.key)"
+                    [has]="has(good.key)"
+                    (showMoreChange)="setShowMore(good.key, $event)">
+  </app-goods-editor>
 </div>
 <a md-fab (click)="showCreateGood = true" color="primary" class="create-good">
   <md-icon>add</md-icon>
 </a>
 
-<md-card class="goods-card" *ngIf="showCreateGood">
-  <img [src]="editGoods.img" *ngIf="editGoods.img" md-card-image/>
-  <md-card-title>
-    <md-input-container>
-      <input mdInput [(ngModel)]="editGoods.name" placeholder="谷子名" required>
-    </md-input-container>
-  </md-card-title>
-  <md-card-content>
-    <app-image-picker [(image)]="editGoods.img"></app-image-picker>
-    <md-input-container>
-      <textarea mdInput [(ngModel)]="editGoods.description" placeholder="描述"></textarea>
-    </md-input-container>
-  </md-card-content>
-  <md-card-actions>
-    <a md-raised-button (click)="addGood()" color="primary"
-       [disabled]="!(!!editGoods.name && !!editGoods.img)">
-       {{!!editGoods.key ? '更新': '添加'}}
-    </a>
-  </md-card-actions>
-</md-card>
+<app-goods-editor *ngIf="showCreateGood"
+                  [goods]="editGoods"
+                  (submitChange)="showCreateGood = false">
+</app-goods-editor>

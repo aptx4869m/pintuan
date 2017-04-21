@@ -1,0 +1,119 @@
+<md-card class="goods-card" *ngIf="isEditMode">
+  <img [src]="goods.img" *ngIf="goods.img" md-card-image/>
+  <md-card-title>
+    <md-input-container>
+      <input mdInput [(ngModel)]="goods.name" placeholder="谷子名" required>
+    </md-input-container>
+  </md-card-title>
+  <md-card-content>
+    <div>
+      主图片
+      <app-image-picker [(image)]="goods.img"></app-image-picker>
+    </div>
+    <div>
+      副图片
+      <button md-button (click)="toggleShowMore()">更多</button>
+      <div *ngIf="showMore">
+        <div *ngFor="let image of goods.images; let i = index">
+          <app-image-picker [(image)]="goods.images[i]"></app-image-picker>
+          <button md-button (click)="goods.img = goods.image">设为主图</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      描述
+      <md-input-container>
+        <textarea mdInput [(ngModel)]="goods.description" placeholder="描述"></textarea>
+      </md-input-container>
+    </div>
+    <div>
+      日期
+      <md-input-container>
+        <input mdInput [(ngModel)]="goods.date" placeholder="日期">
+      </md-input-container>
+    </div>
+    <div>
+      厂商
+      <md-input-container>
+        <input mdInput [(ngModel)]="goods.brand" placeholder="厂商">
+      </md-input-container>
+    </div>
+    <div>
+      价格
+      <md-input-container>
+        <input mdInput [(ngModel)]="goods.price" placeholder="价格">
+      </md-input-container>
+    </div>
+    <div>
+      规格
+      <md-input-container>
+        <textarea mdInput [(ngModel)]="goods.specification" placeholder="规格"></textarea>
+      </md-input-container>
+    </div>
+    <div>
+      网址
+      <md-input-container>
+        <input mdInput [(ngModel)]="goods.url" placeholder="网址">
+      </md-input-container>
+    </div>
+  </md-card-content>
+  <md-card-actions>
+    <a md-raised-button (click)="addGood()" color="primary"
+       [disabled]="!(!!goods.name && !!goods.img)">
+       {{!!goods.key ? '更新': '添加'}}
+    </a>
+  </md-card-actions>
+</md-card>
+
+<md-card class="goods-card" *ngIf="!isEditMode && goods.key">
+  <img [src]="goods.img" [alt]="goods.name" *ngIf="goods.img" md-card-image />
+  <md-card-title>
+    {{goods.name}}
+  </md-card-title>
+  <md-card-content>
+    {{goods.description}}
+    <div *ngIf="goods.date">
+      日期: {{goods.date}}
+    </div>
+    <div *ngIf="goods.brand">
+      厂商: {{goods.brand}}
+    </div>
+    <div *ngIf="goods.price">
+      价格: {{goods.price}}
+    </div>
+    <div *ngIf="goods.specification">
+      规格: {{goods.specification}}
+    </div>
+    <div *ngIf="goods.url">
+      网址: <a [href]="goods.url" target="_blank">{{goods.url}}</a>
+    </div>
+    <button md-button (click)="toggleShowMore()">更多</button>
+    <div *ngIf="showMore">
+      <div *ngFor="let image of goods.images">
+        <app-image-picker [image]="image"
+                          [editable]="false">
+        </app-image-picker>
+        <button md-button (click)="setImage(image)">设为主图</button>
+      </div>
+    </div>
+  </md-card-content>
+  <md-card-actions>
+    <a md-button (click)="markHas()">
+      <md-icon [ngClass]="hasClass">
+        check_circle
+      </md-icon>已有
+     </a>
+    <button md-button (click)="markWant()">
+       <md-icon [ngClass]="wantClass">
+         {{want ? 'favorite' : 'favorite_border'}}
+       </md-icon>想要
+    </button>
+
+    <a md-button (click)="isEditMode = true">
+      <md-icon>mode_edit</md-icon>编辑
+    </a>
+    <a md-button (click)="deleteGoods(goods.key)" *ngIf="isAdmin">
+      删除
+    </a>
+  </md-card-actions>
+</md-card>

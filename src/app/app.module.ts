@@ -30,6 +30,7 @@ import { ImagePickerComponent } from './image-picker/image-picker.component';
 import { BlackListComponent } from './black-list/black-list.component';
 import { BlackEditorComponent } from './black-editor/black-editor.component';
 import { IndexComponent } from './index/index.component';
+import { GoodsEditorComponent } from './goods-editor/goods-editor.component';
 
 var config = {
   syncURL: "https://aptx4869.wilddogio.com",
@@ -73,7 +74,8 @@ const appRoutes: Routes = [
     ImagePickerComponent,
     BlackListComponent,
     BlackEditorComponent,
-    IndexComponent
+    IndexComponent,
+    GoodsEditorComponent
   ],
   imports: [
     BrowserModule,

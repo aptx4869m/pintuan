@@ -24,7 +24,7 @@
         <input mdInput [(ngModel)]="editTag" placeholder="加标签" (blur)="addTag()">
       </md-input-container>
     </div>
-    <div *ngIf="blackKey">
+    <div *ngIf="!!blackKey">
       更多
       <app-black-note-editor [blackKey]="blackKey" [isEditMode]="true"></app-black-note-editor>
     </div>
@@ -40,7 +40,7 @@
   </md-card-actions>
 </md-card>
 
-<md-card class="blacklist-card" *ngIf="!isEditMode && black">
+<md-card class="blacklist-card" *ngIf="!isEditMode && !!black">
   <md-card-title>
     <img [src]="black.img" [alt]="black.name" *ngIf="black.img" md-card-avatar>
     {{black.name}}

@@ -2,6 +2,7 @@ import { Component, OnDestroy, Input } from '@angular/core';
 import { Router} from '@angular/router';
 import {Collection} from '../collection';
 import { SnackbarService} from '../snackbar.service';
+import { AdminService} from '../admin.service';
 import * as wilddog from 'wilddog';
 
 @Component({
@@ -15,7 +16,13 @@ export class GroupInfoEditorComponent implements OnDestroy {
   _key: string;
   @Input() isOwner: boolean = false;
 
-  constructor(public snackbarService: SnackbarService, public router: Router) {}
+  constructor(public snackbarService: SnackbarService, public router: Router,
+      public adminService: AdminService) {}
+
+  get editable() {
+    return this.adminService.isAdmin ||
+      wilddog.auth().currentUser.uid == this.collection.owner;
+  }
 
   @Input()
   get key(): string {
@@ -47,12 +54,14 @@ export class GroupInfoEditorComponent implements OnDestroy {
 
   delete() {
     if (this.isOwner && this.ref) {
-      wilddog.sync().ref('groups').child(this._key).remove()
-        .then((_) => {
-          this.snackbarService.info('更新成功');
-          this.router.navigateByUrl('/groups');
-        })
-        .catch((err) => this.snackbarService.error(err));
+      this.snackbarService.open('确定删除?', '删除').onAction().subscribe(() => {
+        wilddog.sync().ref('groups').child(this._key).remove()
+          .then((_) => {
+            this.snackbarService.info('更新成功');
+            this.router.navigateByUrl('/groups');
+          })
+          .catch((err) => this.snackbarService.error(err));
+      })
     }
   }
 

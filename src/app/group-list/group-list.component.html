@@ -1,25 +1,6 @@
 <div class="group-cards">
-  <md-card class="group-card" *ngFor="let group of groups" routerLink="/group/{{group.key}}">
-    <img [src]="group.img" [alt]="group.name" *ngIf="group.img" md-card-image />
-    <md-card-title>
-      {{group.name}}
-    </md-card-title>
-    <md-card-content>
-      <app-user-picker [value]="group.owner" [editable]="false">
-      </app-user-picker>
-        <div>{{group.description}}</div>
-    </md-card-content>
-    <md-card-actions>
-      <a md-button
-         routerLink="/group/{{group.key}}">
-         查看
-       </a>
-      <a md-button routerLink="/group-edit/{{group.key}}"
-         *ngIf="group.owner === currentUser || isAdmin">
-         编辑
-       </a>
-    </md-card-actions>
-  </md-card>
+  <app-group-card class="group-card" *ngFor="let groupKey of groupKeys" [groupKey]="groupKey">
+  </app-group-card>
 </div>
 <a md-fab (click)="showCreateGroup = true" color="primary" class="create-group">
   <md-icon>add</md-icon>
@@ -35,6 +16,7 @@
     <md-input-container>
       <input mdInput [(ngModel)]="newGroupImg" placeholder="图片">
     </md-input-container>
+    <md-checkbox [(ngModel)]="newGroupOpen">开放</md-checkbox>
   </md-card-content>
   <md-card-actions>
     <a md-raised-button (click)="addGroup()" color="primary"

@@ -1,0 +1,21 @@
+<md-card class="group-card" *ngIf="!!group">
+  <img [src]="group.img" [alt]="group.name" *ngIf="group.img" md-card-image />
+  <md-card-title>
+    {{group.name}}
+  </md-card-title>
+  <md-card-content>
+    <app-user-picker [value]="group.owner" [editable]="false">
+    </app-user-picker>
+      <div>{{group.description}}</div>
+  </md-card-content>
+  <md-card-actions>
+    <a md-button
+       routerLink="/group/{{groupKey}}">
+       查看
+     </a>
+    <a md-button routerLink="/group-edit/{{groupKey}}"
+       *ngIf="group.owner === currentUser || isAdmin">
+       编辑
+     </a>
+  </md-card-actions>
+</md-card>

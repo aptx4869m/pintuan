@@ -28,4 +28,7 @@
     <button md-raised-button (click)="delete()" color="warn">删除</button>
     <a md-raised-button routerLink="/group/{{key}}">完成</a>
   </md-card-actions>
+  <md-card-actions *ngIf="!isOwner && editable">
+    <a md-raised-button routerLink="/group-edit/{{key}}">编辑</a>
+  </md-card-actions>
 </md-card>

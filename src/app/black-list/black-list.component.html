@@ -5,7 +5,7 @@
   </app-black-editor>
 
   <div class="blacklist-card" *ngFor="let blackKey of blackKeys">
-    <app-black-editor [blackKey]="blackKey">
+    <app-black-editor [blackKey]="blackKey" [routerLink]="blackLink(blackKey)" [moreVisible]="false">
     </app-black-editor>
   </div>
 </div>

@@ -1,5 +1,5 @@
 .goods-card {
-  width: 250px;
+  width: 300px;
   margin: 16px;
 }
 
@@ -7,13 +7,6 @@
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
-}
-
-.create-good {
-  position: fixed;
-  z-index: 1000;
-  right: 20px;
-  bottom: 20px;
 }
 
 .has-good {

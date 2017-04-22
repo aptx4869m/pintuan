@@ -21,7 +21,7 @@ export class BlackEditorComponent implements OnInit {
     this._fetchBlack();
   }
 
-  moreVisible: boolean = false;
+  @Input() moreVisible: boolean = false;
 
   blackDescriptions: string = '';
 

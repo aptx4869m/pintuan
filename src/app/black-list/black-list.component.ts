@@ -43,4 +43,8 @@ export class BlackListComponent implements OnInit {
     this.showCreateBlack = true;
     window.scrollTo(0, 0);
   }
+
+  blackLink(key: string) {
+    return `/black/${key}`;
+  }
 }

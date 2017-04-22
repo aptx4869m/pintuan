@@ -12,11 +12,12 @@ import {AdminService} from '../admin.service';
 })
 export class GroupListComponent implements OnInit {
   ref: any;
-  groups: Collection[];
+  groupKeys: string[];
 
   // create new Group
   newGroupName: string;
   newGroupImg: string;
+  newGroupOpen: boolean = false;
   showCreateGroup: boolean = false;
 
   get isAdmin() { return this.adminService.isAdmin; }
@@ -28,31 +29,36 @@ export class GroupListComponent implements OnInit {
   constructor(public router: Router,
       public snackbar: MdSnackBar,
       public adminService: AdminService) {
-    this.ref = wilddog.sync().ref('groups');
+    this.ref = wilddog.sync().ref('groups-list');
     this.ref.on('value', (snapshot) => {
-      this.groups = [];
+      this.groupKeys = [];
       snapshot.forEach((childSnapshot) => {
-        if (childSnapshot) {
-
-          let group = childSnapshot.val().info as Collection;
-          if (group) {
-            group.key = childSnapshot.key();
-            this.groups.push(group);
-          }
-        }
-      })
+        this.groupKeys.push(childSnapshot.key());
+      });
+      this.groupKeys = this.groupKeys.reverse();
     });
   }
 
   addGroup() {
     this.showCreateGroup = false;
-    this.ref.push({
+    wilddog.sync().ref('groups').push({
       info: {
         owner: this.currentUser,
         name: this.newGroupName,
+        img: this.newGroupImg,
+        open: true,
+        createdTime: wilddog.sync().ServerValue.TIMESTAMP
       }
     }).then((newRef) => {
-      this.router.navigateByUrl('/group/' + newRef.key());
+      let key = newRef.key();
+      if (this.newGroupOpen) {
+        wilddog.sync().ref('groups-list').child(key)
+          .set(wilddog.sync().ServerValue.TIMESTAMP).then(() => {
+            this.router.navigateByUrl('/group-edit/' + key);
+          });
+      } else {
+        this.router.navigateByUrl('/group-edit/' + key);
+      }
     }).catch((err) => this.snackbar.open(`错误${err}`, null, {duration: 2000}));
 
   }

@@ -1,5 +1,5 @@
 .goods-card {
-  width: 250px;
+  width: 300px;
   margin: 16px;
 }
 
@@ -30,3 +30,7 @@
 
 .grid-item { width: 200px; }
 .grid-item--width2 { width: 400px; }
+
+.pager {
+  margin: 20px;
+}

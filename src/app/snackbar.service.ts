@@ -22,4 +22,7 @@ export class SnackbarService {
       .catch((err) => this.error(err));
   }
 */
+  open(text: string, action: string) {
+    return this.snackbar.open(text, action, {duration: 2000});
+  }
 }

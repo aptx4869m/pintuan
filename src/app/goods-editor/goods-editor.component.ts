@@ -72,11 +72,13 @@ export class GoodsEditorComponent implements OnInit {
 
   deleteGoods() {
     if (this.adminService.isAdmin && this.goodsKey) {
-      let action = wilddog.sync().ref('goods-list').child(this.goodsKey).remove();
-      action.then((_) => {
-        this.snackbar.info('更新成功');
-      })
-      .catch((err) => this.snackbar.error(err));
+      this.snackbar.open('确定删除?', '删除').onAction().subscribe(() => {
+        let action = wilddog.sync().ref('goods-list').child(this.goodsKey).remove();
+        action.then((_) => {
+          this.snackbar.info('更新成功');
+        })
+        .catch((err) => this.snackbar.error(err));
+      });
     }
   }
 
@@ -97,7 +99,8 @@ export class GoodsEditorComponent implements OnInit {
       this.goods.lastModified = wilddog.sync().ServerValue.TIMESTAMP;
       action = wilddog.sync().ref('goods').push(this.goods).then((newRef) => {
         this.goodsKey = newRef.key();
-        wilddog.sync().ref('goods-list').child(this.goodsKey).set(true);
+        wilddog.sync().ref('goods-list').child(this.goodsKey)
+            .set(wilddog.sync().ServerValue.TIMESTAMP);
       });
     } else {
       action = wilddog.sync().ref('goods').child(this.goodsKey)

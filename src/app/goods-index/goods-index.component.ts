@@ -12,6 +12,7 @@ import {SnackbarService} from '../snackbar.service';
 })
 export class GoodsIndexComponent implements OnInit {
   goodsKeys: string[] = [];
+  displayKeys: string[] = [];
   wantList: string[] = [];
   hasList: string[] = [];
 
@@ -19,8 +20,8 @@ export class GoodsIndexComponent implements OnInit {
   currentShowMore: string;
 
   pageSize: number = 40;
-  lastValue: number;
-  firstValue: number;
+  currentPage: number = 0;
+  numbers: number[];
   ref: any;
 
   get isAdmin() { return this.adminService.isAdmin; }
@@ -32,7 +33,7 @@ export class GoodsIndexComponent implements OnInit {
               public snackbar: SnackbarService) { }
 
   ngOnInit() {
-    this.ref = wilddog.sync().ref('goods-list').orderByValue().limitToFirst(this.pageSize);
+    this.ref = wilddog.sync().ref('goods-list').orderByValue();
     this.ref.on('value', (snapshot) => {
       this._addGoods(snapshot);
     });
@@ -43,37 +44,27 @@ export class GoodsIndexComponent implements OnInit {
     })
   }
 
-  nextPage() {
-    this.ref.off();
-    this.ref = wilddog.sync().ref('goods-list').orderByValue()
-      .startAt(this.lastValue).limitToFirst(this.pageSize);
-    this.ref.on('value', (snapshot) => {
-        this._addGoods(snapshot);
-    });
-  }
-
-  prevPage() {
-    this.ref.off();
-    this.ref = wilddog.sync().ref('goods-list').orderByValue()
-      .endAt(this.firstValue).limitToLast(this.pageSize);
-    this.ref.on('value', (snapshot) => {
-        this._addGoods(snapshot);
-    });
+  goToPage(i: number) {
+    this.currentPage = i;
+    let start = this.currentPage * this.pageSize;
+    this.displayKeys = this.goodsKeys.slice(start, start + this.pageSize);
   }
 
   _addGoods(snapshot: any) {
     this.goodsKeys = [];
+    this.numbers = [];
     snapshot.forEach((childSnapshot) => {
       let goodsKey = childSnapshot.key();
       this.goodsKeys.push(goodsKey);
-
-      if (this.goodsKeys.length == 1) {
-        this.firstValue = childSnapshot.val();
-      }
-      if (this.goodsKeys.length === snapshot.numChildren()) {
-        this.lastValue = childSnapshot.val();
-      }
     });
+    this.goodsKeys = this.goodsKeys.reverse();
+
+    for (let i = 0; i <= (this.goodsKeys.length / this.pageSize); i++) {
+      if (i * this.pageSize < this.goodsKeys.length) {
+        this.numbers.push(i);
+      }
+    }
+    this.goToPage(this.currentPage);
   }
 
   _fetchGoods() {

@@ -32,6 +32,8 @@ import { BlackEditorComponent } from './black-editor/black-editor.component';
 import { IndexComponent } from './index/index.component';
 import { GoodsEditorComponent } from './goods-editor/goods-editor.component';
 import { BlackNoteEditorComponent } from './black-note-editor/black-note-editor.component';
+import { BlackPageComponent } from './black-page/black-page.component';
+import { GroupCardComponent } from './group-card/group-card.component';
 
 var config = {
   syncURL: "https://aptx4869.wilddogio.com",
@@ -51,7 +53,8 @@ const appRoutes: Routes = [
   { path: 'group/:id', component: GroupJoinComponent },
   { path: 'bought', component: SecondHandComponent },
   { path: 'admin/:id', component: AdminManagerComponent},
-  { path: 'blacklist', component: BlackListComponent}
+  { path: 'blacklist', component: BlackListComponent},
+  { path: 'black/:id', component: BlackPageComponent}
 ];
 
 @NgModule({
@@ -77,7 +80,9 @@ const appRoutes: Routes = [
     BlackEditorComponent,
     IndexComponent,
     GoodsEditorComponent,
-    BlackNoteEditorComponent
+    BlackNoteEditorComponent,
+    BlackPageComponent,
+    GroupCardComponent
   ],
   imports: [
     BrowserModule,

@@ -2,3 +2,7 @@ img {
   max-height: 200px;
   max-width: 200px;
 }
+
+.outer {
+  margin: 20px;
+}

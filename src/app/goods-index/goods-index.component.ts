@@ -16,6 +16,10 @@ export class GoodsIndexComponent implements OnInit {
   wantList: string[] = [];
   hasList: string[] = [];
 
+  currentKeys: string[] = [];
+  options = ['all', 'has', 'want'];
+  currentOption = 'all';
+
   showCreateGood: boolean = false;
   currentShowMore: string;
 
@@ -32,6 +36,24 @@ export class GoodsIndexComponent implements OnInit {
   constructor(public adminService: AdminService,
               public snackbar: SnackbarService) { }
 
+  switchOption(option: string) {
+    if (option != this.currentOption) {
+      this.currentOption = option;
+      switch(option) {
+        case 'all':
+          this.currentKeys = this.goodsKeys;
+          break;
+        case 'has':
+          this.currentKeys = this.hasList;
+          break;
+        case 'want':
+          this.currentKeys = this.wantList;
+          break;
+      }
+      this.buildPageNumbers();
+      this.goToPage(0);
+    }
+  }
   ngOnInit() {
     this.ref = wilddog.sync().ref('goods-list').orderByValue();
     this.ref.on('value', (snapshot) => {
@@ -47,7 +69,7 @@ export class GoodsIndexComponent implements OnInit {
   goToPage(i: number) {
     this.currentPage = i;
     let start = this.currentPage * this.pageSize;
-    this.displayKeys = this.goodsKeys.slice(start, start + this.pageSize);
+    this.displayKeys = this.currentKeys.slice(start, start + this.pageSize);
   }
 
   _addGoods(snapshot: any) {
@@ -59,12 +81,21 @@ export class GoodsIndexComponent implements OnInit {
     });
     this.goodsKeys = this.goodsKeys.reverse();
 
-    for (let i = 0; i <= (this.goodsKeys.length / this.pageSize); i++) {
-      if (i * this.pageSize < this.goodsKeys.length) {
+    if (this.currentOption == 'all') {
+      this.currentKeys = this.goodsKeys;
+      this.buildPageNumbers();
+      this.goToPage(this.currentPage);
+
+    }
+  }
+
+  buildPageNumbers() {
+    this.numbers = [];
+    for (let i = 0; i <= (this.currentKeys.length / this.pageSize); i++) {
+      if (i * this.pageSize < this.currentKeys.length) {
         this.numbers.push(i);
       }
     }
-    this.goToPage(this.currentPage);
   }
 
   _fetchGoods() {
@@ -74,6 +105,12 @@ export class GoodsIndexComponent implements OnInit {
       snapshot.forEach((childSnapshot) => {
         this.hasList.push(childSnapshot.key());
       });
+      this.hasList = this.hasList.reverse();
+      if (this.currentOption == 'has') {
+        this.currentKeys = this.hasList;
+        this.buildPageNumbers();
+        this.goToPage(this.currentPage);
+      }
     });
     wilddog.sync().ref('user-goods').child(this.currentUser).child('want')
       .on('value', (snapshot) => {
@@ -81,6 +118,12 @@ export class GoodsIndexComponent implements OnInit {
       snapshot.forEach((childSnapshot) => {
         this.wantList.push(childSnapshot.key());
       });
+      this.wantList = this.wantList.reverse();
+      if (this.currentOption == 'want') {
+        this.currentKeys = this.wantList;
+        this.buildPageNumbers();
+        this.goToPage(this.currentPage);
+      }
     });
   }
 

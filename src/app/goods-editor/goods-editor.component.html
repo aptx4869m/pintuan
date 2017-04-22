@@ -68,7 +68,7 @@
   </md-card-actions>
 </md-card>
 
-<md-card class="goods-card" *ngIf="!isEditMode && !!goodsKey">
+<md-card class="goods-card" *ngIf="!isEditMode && !!goodsKey && !!goods">
   <img [src]="goods.img" [alt]="goods.name" *ngIf="goods.img" md-card-image />
   <md-card-title>
     {{goods.name}}

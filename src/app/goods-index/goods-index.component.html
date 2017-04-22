@@ -1,3 +1,6 @@
+<button md-button (click)="switchOption('all')">所有</button>
+<button md-button (click)="switchOption('has')">已有的</button>
+<button md-button (click)="switchOption('want')">想要的</button>
 <a md-icon-button *ngFor="let number of numbers" (click)="goToPage(number)" class="pager"
     [color]="number == currentPage ? 'primary' : 'warn' ">{{number + 1}}</a>
 <div class="goods-cards">
@@ -14,6 +17,9 @@
                     (showMoreChange)="setShowMore(goodsKey, $event)">
   </app-goods-editor>
 </div>
+<button md-button (click)="switchOption('all')">所有</button>
+<button md-button (click)="switchOption('has')">已有的</button>
+<button md-button (click)="switchOption('want')">想要的</button>
 <a md-icon-button *ngFor="let number of numbers" (click)="goToPage(number)" class="pager"
     [color]="number == currentPage ? 'primary' : 'warn' ">{{number + 1}}</a>
 <a md-fab (click)="addClicked()" color="primary" class="create-good">
